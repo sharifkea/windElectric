@@ -2,6 +2,8 @@
      session_start();
      require_once 'src/data.php';
     $return=0;
+  
+
     if(!empty($_REQUEST['Number'])){
         $service = new data;
         if($_REQUEST['Number']==1){
@@ -143,12 +145,56 @@
                 echo json_encode($returnValue);
                 //echo $_REQUEST['comId'];
             }
-            else echo 'No Com Id';
-        }  
+            else echo '20 No Com Id';
+        }
+        if($_REQUEST['Number']==21){
+            $_FILES=$_REQUEST['file'];
+            if(isset($_FILES)){
+                //require_once 'src/data.php';
+                $service = new data;
+                $statusMsg = '';
+                //echo '<script>console.log("'.$_FILES.'")</script>';
+                
+                // File upload path
+                $targetDir = "uploads/";
+                $fileName = $_FILES["name"];
+                $targetFilePath = $targetDir . $fileName;
+                $fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
+                
+                if(!empty($_FILES["name"])){
+                    // Allow certain file formats
+                    $allowTypes = array('jpg','png','jpeg','gif','pdf');
+                    if(in_array($fileType, $allowTypes)){
+                        move_uploaded_file($_FILES["tmp_name"], $targetFilePath);
+                        $statusMsg = "The file ".$fileName. " has been uploaded successfully.";
+                        // Upload file to server
+                        /*if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
+                            //$insert=$service->intoImg($fileName);
+                            if($insert){
+                                $statusMsg = "The file ".$fileName. " has been uploaded successfully.";
+                            }else{
+                                $statusMsg = "File upload failed, please try again. Changing image name might help!";
+                            } 
+                        }else{
+                            $statusMsg = "Sorry, there was an error uploading your file.";
+                        }*/
+                    }else{
+                        $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
+                    }
+                }else{
+                    $statusMsg = 'Please select a file to upload.';
+                }
+                echo $statusMsg;
+                // Display status message
+                }
+            else echo '21No Com Id';
+        }
+          
         
     
         else echo false;
         //else  $_SESSION['Number'] =1;
     // echo ($_SESSION['Number']);
     }
+
 ?>

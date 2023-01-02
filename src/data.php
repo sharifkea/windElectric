@@ -36,12 +36,22 @@ class data extends DB{
             if(isset($value[$x]))$value[$x]=$this->sqlInjection($value[$x]);
         }
         try{
-            if($value['note']!=null&&$value['history_mide_id']!=null){
+            if($value['note']!=null&&$value['history_mide_id']!=null&&$value['image_name']==null){
                 $query = <<<'SQL'
                         INSERT INTO history (note,history_mide_id) VALUES (?,?);
                 SQL;
                 $stmt = $newDb->pdo->prepare($query);
                 $stmt->execute([$value['note'],$value['history_mide_id']]);
+                $newID = $newDb->pdo->lastInsertId();
+                $newDb->disconnect();
+                return true;
+            }
+            else if($value['note']!=null&&$value['history_mide_id']!=null&&$value['image_name']!=null){
+                $query = <<<'SQL'
+                        INSERT INTO history (note,history_mide_id,image_name) VALUES (?,?,?);
+                SQL;
+                $stmt = $newDb->pdo->prepare($query);
+                $stmt->execute([$value['note'],$value['history_mide_id'],$value['image_name']]);
                 $newID = $newDb->pdo->lastInsertId();
                 $newDb->disconnect();
                 return true;

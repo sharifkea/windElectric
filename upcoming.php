@@ -24,6 +24,10 @@
                 </section>
             </div>
         </div>
+        <div id="imgModal" class="imgM">
+            <span class="closeImg" onclick= 'closeImgModal()'>&times;</span>
+            <img class="imgM-content" id="img01">
+        </div>
         <script>
             upcomingWStart();
         </script>

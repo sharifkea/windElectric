@@ -100,8 +100,6 @@ function ptCall(name,comCode,code){ /* to get Tasks on modal*/
     
       const table = $("<h1 class='hh'>"+data[0].name+"</h1>");
       table.append($("<p class='pp'>Number:"+data[0].component_code+data[0].code+"</p>"));
-      //table.append($("<input type='text' name='"+n+"' placeholder='New Note' id='nh' />"));
-      //table.append($('<input name="'+o+'" type="submit" value="Add" id="addNH" onclick="addHistory()"/> </div>'));
       console.log(table);
       table.append($("<table class='center' />"));
       const header = $("<thead />");
@@ -228,11 +226,16 @@ function getNum(mF,taskId){ /*it returns num value for delUp */
 function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT()*/
     let count=data.length;
     console.log(count);
+    let ImageData='';
+    
     
     let name=data[0].componentName, comCode=data[0].component_code, code=data[0].code, mide_id=data[0].mide_id;  
     const table = $("<h1 class='hh'>"+name+"</h1>");
     table.append($("<p class='pp'>Number:"+comCode+code+"</p>"));
-    table.append($("<input type='text' name='"+comCode+"' placeholder='New Note' id='nh' />"));
+    table.append($('<label for="fname">Write New Note:</label>'));
+    table.append($("<input type='text' name='"+comCode+"' placeholder='New Note' id='nh' /><br>"));
+    table.append($('<label for="fname">Select an Image File to Upload:</label>'));
+    table.append($('<input id="file" type="file" name="file" accept="image/jpeg, image/png, image/jpg"></input><br>'));
     table.append($('<input name="'+code+'" type="submit" value="Add" id="addNH" onclick="addHistory('+opt+')"/> </div>'));
     console.log(table);
     if(typeof data[0].note!=='undefined')
@@ -245,6 +248,7 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
       append($("<th />", { "text": "Component Code"})).
       append($("<th />", { "text": "Component Number"})).
       append($("<th />", { "text": "Note"})).
+      append($("<th />", { "text": "Image"})).
       append($("<th />", { "text": "Date & Time"}))
       header.append(headerRow);
       table.append(header);
@@ -253,6 +257,11 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
       let classOE="";
       let j=0, mide=0;
       for(let i=0;i<count;i++){
+        
+        if(data[i].image_name)
+        ImageData='<img id="'+data[i].id+'" onclick= "imgModal('+data[i].id+')" src="uploads/'+data[i].image_name+'" alt="Snow" style="width:100%;max-width:60px"></img>';
+        else ImageData='Image Not Available';
+        
         if(oe==0){
           classOE="odd";
           oe++;
@@ -266,6 +275,7 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
                     <td class='other'>${data[i].component_code}</td>
                     <td class='other'>${data[i].code}</td>
                     <td class='other'>${data[i].note}</td>
+                    <td class='other'>${ImageData}</td>
                     <td class='other'>${data[i].date_time}</td>
                     </tr>`
         tableBody.append(tr);
@@ -276,38 +286,82 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
     table.append($("<input type='hidden' id='mide' value='"+mide_id+"' placeholder='New Note' id='nh' />"));
     return (table);
 }
+function imgModal(id){ /*to display Image in Modal*/
+  console.log(id);
+  //var img = document.getElementById("myImg");
+  var modal = document.getElementById("imgModal");
+  // Get the image and insert it inside the modal - use its "alt" text as a caption
+  var img = document.getElementById(id);
+  console.log(img.src);
+  var modalImg = document.getElementById("img01");
+  //var captionText = document.getElementById("caption");
+  //console.log('rony');
+  modal.style.display = "block";
+  modalImg.src = img.src;
+  //captionText.innerHTML = img.alt;
+}
 
 function addHistory(opt){/* when add botton clicked in history table, to save Note*/
-    console.log(opt,typeof opt);
-    let history = document.getElementById("nh").value;
-    history=history.trim();
-    if (history == "") {
-      alert("Note must be filled out");
+  console.log(opt,typeof opt);
+  let history = document.getElementById("nh").value;
+  history=history.trim();
+  if (history == "") {
+    alert("Note must be filled out");
+  }
+  else{
+    const file = document.getElementById("file");
+    let comCode = document.getElementById("nh").name;
+    let code = document.getElementById("addNH").name;
+    let mide = document.getElementById("mide").value;
+    console.log(history,comCode,code,mide);
+    console.log(file);
+    let image_name = '';
+    if(file.files[0]){ 
+      var property = file.files[0];
+      image_name= property.name;
     }
-    else{
-      let comCode = document.getElementById("nh").name;
-      let code = document.getElementById("addNH").name;
-      let mide = document.getElementById("mide").value;
-      console.log(history,comCode,code,mide);
-      
-      let num='Number=2&note='+history+'&history_mide_id='+mide;
-      console.log(num);
-      $.ajax({
-        url: "backend2.php?"+num,
-        type: "GET",
-        success: function(data) { 
-          console.log(data);
-          if(data==true){
+    let num='Number=2&note='+history+'&history_mide_id='+mide+'&image_name='+image_name;
+    console.log(num);
+    $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+        console.log(data);
+        if(data==true){
+          if(image_name!=''){
+            var form_data = new FormData();
+            form_data.append("file",property);
+            $.ajax({
+              url:'upload.php',
+              method:'POST',
+              data:form_data,
+              contentType:false,
+              cache:false,
+              processData:false,
+              success:function(data){
+                if(data==true){
+                  alert("History Saved.");
+                  getHistoryFT(mide,opt);
+                }
+                else{
+                  alert("Something went wrong. History not Saved. Try (After Changing the Image Name) again.");
+                } 
+              }
+            });
+          }else {
             alert("History Saved.");
             getHistoryFT(mide,opt);
           }
-          else{
-            alert("Something went wrong. History not Saved. Try again later");
-          }
         }
-      });
-    }
+        else{
+          alert("Something went wrong. History not Saved. Try again later");
+        }
+      }
+
+    });  
+  }
 }
+      
 
 function pkgClk(v) { /* set display for package view*/
    
@@ -464,6 +518,7 @@ async function getComponentHistory(sel){ /* gets option list for component numbe
 }
 function getTable(m,data){ /*returns all history as table for histortPageStart()*/
     let count=data.length;
+    let ImageData='';
     console.log(count);
     const table = $("<h1 class='hh'>"+m+"</h1>");
     console.log(table);
@@ -476,6 +531,7 @@ function getTable(m,data){ /*returns all history as table for histortPageStart()
     append($("<th />", { "text": "Component Code"})).
     append($("<th />", { "text": "Component Number"})).
     append($("<th />", { "text": "Note"})).
+    append($("<th />", { "text": "Image"})).
     append($("<th />", { "text": "Date & Time"}))
     header.append(headerRow);
     table.append(header);
@@ -484,6 +540,9 @@ function getTable(m,data){ /*returns all history as table for histortPageStart()
     let classOE="";
     let j=0, mide=0;
     for(let i=0;i<count;i++){
+      if(data[i].image_name)
+        ImageData='<img id="'+data[i].id+'" onclick= "imgModal('+data[i].id+')" src="uploads/'+data[i].image_name+'" alt="Snow" style="width:100%;max-width:60px"></img>';
+        else ImageData='Image Not Available';
       if(oe==0){
         classOE="odd";
         oe++;
@@ -499,6 +558,7 @@ function getTable(m,data){ /*returns all history as table for histortPageStart()
                   <td class='other'>${data[i].component_code}</td>
                   <td class='other'>${data[i].code}</td>
                   <td class='other'>${data[i].note}</td>
+                  <td class='other'>${ImageData}</td>
                   <td class='other'>${data[i].date_time}</td>
                   </tr>`
       tableBody.append(tr);
@@ -718,4 +778,8 @@ $(document).delegate("#span", "click", function(e) { /* to exit from modal*/
     let modal = document.getElementById("myModal");
     //window.location.href ='home.php';
       modal.style.display = "none";
-});  
+}); 
+function closeImgModal() { /* to exit from Image modal*/
+  var modal = document.getElementById("imgModal");
+  modal.style.display = "none";
+} 
