@@ -1,0 +1,355 @@
+https://mysql.jawsdb.com/resource/dashboard
+
+Connection String
+mysql://niyjbh33piou15dg:jh5fbm44oialxjx2@spryrr1myu6oalwl.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/zt8bhfo1tcz5g9xf
+
+Host:	spryrr1myu6oalwl.chr7pe7iynqr.eu-west-1.rds.amazonaws.com	
+Username:	niyjbh33piou15dg	
+Password:	jh5fbm44oialxjx2	
+Port:	3306	
+Database:	zt8bhfo1tcz5g9xf
+
+
+
+ALTER TABLE  `tablename` CHANGE  `dt`  `dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+use winddb;
+INSERT INTO mide(code, component_id, diagram_id)
+VALUES ('01',1,1),('01',2,1),('01',8,1);
+
+INSERT INTO mide(code, component_id, diagram_id)
+VALUES ('01',3,1),('02',3,1),('03',3,1),('04',3,1),('05',3,1),
+       ('01',5,1),('01',3,1),('01',6,1),('02',6,1),('03',6,1),
+       ('01',7,1),('02',7,1),
+       ('01',4,1),('02',4,1),('03',4,1),('04',4,1),('05',4,1),
+       ('06',4,1),('07',4,1),('08',4,1),('09',4,1),('10',4,1),
+       ('A01',9,1),('A02',9,1),('A03',9,1),('A04',9,1),('A05',9,1),
+       ('A06',9,1),('B01',9,1),('B02',9,1),('B03',9,1),('B04',9,1),
+       ('B05',9,1),('B06',9,1);
+use winddb;
+INSERT INTO history(NOTE,HISTORY_MIDE_ID)
+VALUES ('Excellent.',1),('Looks Good.',2),('Oiling required.',3),('Remember to solve FFR problems.',4),('Not bad.',5),
+       ('Problems fixed now.',6),('Not bad.',7),('No problem found.',8),
+       ('Inspection done.',9),('Everything is fine.',10),('Had some problems, fixed now.',11),
+       ('Remember to solve RQ problems.',12),('Looks Good',13),('Not bad.',14),('Everything is fine.',15),
+       ('Very Good.',16),('Problems solved.',17),('Oiling required.',18),('Looks Good',19),('Looks Good',20),
+       ('Excellent.',21),('No problem found.',22),('Very Good.',23),
+       ('Inspection done.',24),('Oiling required.',25),('Very Good.',26),('Looks Good.',27),
+       ('Looks Good.',28),('Oiling required.',29),('Fixed.',30),('Looks Good.',31),('Everything is fine.',32),
+       ('Looks Good',33),('Excellent.',34),('Looks Good',35),('Oiling required.',36),('Looks Good.',37);
+
+use winddb;
+INSERT INTO operation(mide_id, Operation_Description, Maintenance_Frequency)
+VALUES (4,'Overhaul, performed by supplier.','25Y'),(4,'Switchgear in service bays isolated one after the other.','2Y'),
+       (4,'Check earthing and coating. Repair if necessary.','2Y'),(4,'Visual inspection of anti-condensation heaters, disconnectors, earthing switch, current and voltage transformers, circuit breakers, SF6 density gauges, surge arrestors, including earthing connections.','6m'),
+       (8,'Overhaul, performed by supplier.','25Y'),(8,'Switchgear in service bays isolated one after the other.','2Y'),
+       (5,'Check earthing and coating. Repair if necessary.','2Y'),(5,'Visual inspection of anti-condensation heaters, disconnectors, earthing switch, current and voltage transformers, circuit breakers, SF6 density gauges, surge arrestors, including earthing connections.','6m'),
+       (5,'Overhaul, performed by supplier.','25Y'),(5,'Switchgear in service bays isolated one after the other.','2Y'),
+       (6,'Check earthing and coating. Repair if necessary.','2Y'),(6,'Visual inspection of anti-condensation heaters, disconnectors, earthing switch, current and voltage transformers, circuit breakers, SF6 density gauges, surge arrestors, including earthing connections.','6m'),
+       (6,'Overhaul, performed by supplier.','25Y'),(6,'Switchgear in service bays isolated one after the other.','2Y'),
+       (8,'Check earthing and coating. Repair if necessary.','2Y'),(8,'Visual inspection of anti-condensation heaters, disconnectors, earthing switch, current and voltage transformers, circuit breakers, SF6 density gauges, surge arrestors, including earthing connections.','6m'),
+       (7,'Overhaul, performed by supplier.','25Y'),(7,'Switchgear in service bays isolated one after the other.','2Y'),
+       (7,'Check earthing and coating. Repair if necessary.','2Y'),(7,'Visual inspection of anti-condensation heaters, disconnectors, earthing switch, current and voltage transformers, circuit breakers, SF6 density gauges, surge arrestors, including earthing connections.','6m');
+
+use zt8bhfo1tcz5g9xf;
+drop view if exists all_history;
+create view all_history as
+SELECT ht.id,ht.history_mide_id as mide_id,ht.image_name,c.component_code,m.code,d.name as diagramName,p.name as packageName,md.name as moduleName,
+       c.name as componentName,ht.note, ht.date_time
+From history ht
+JOIN mide m on m.id = ht.history_mide_id
+    join components c on c.id = m.component_id
+    join diagram d on d.id = m.diagram_id
+    join packages p on p.id = c.package_id
+    join module md on c.module_id = md.id
+        order by ht.id ;
+
+
+use zt8bhfo1tcz5g9xf;
+INSERT INTO operation(ope_mide_id, Operation_Description, Maintenance_Frequency)
+VALUES (	1	,'	"Visual inspection of electrical connections via thermal imaging
+Visual inspection of oil level, dehydrating breathers, expansions bellows, surface damage, tank for leakages, valve positions, contacts and relays, bucholz relay, pressure relief valve, earthing system, maximum temperature indicator"	 ','	1Y	'),
+(	1	,'	Take oil sample and send to lab for testing	 ','	1Y	'),
+(	1	,'	"Visual inspection of electrical connections via thermal imaging
+Visual inspection of oil level, dehydrating breathers, expansions bellows, surface damage, tank for leakages, valve positions, contacts and relays, bucholz relay, pressure relief valve, earthing system, maximum temperature indicator"	 ','	1Y	'),
+(	1	,'	Take oil sample and send to lab for testing	 ','	1Y	'),
+(	1	,'	Check all electrical connections by means of thermal imaging	 ','	6M	'),
+(	1	,'	"Check surface for damages, check earthing of trf, tank cabinets etc
+Check all valves and lids
+Check ventilation systems, door sealings, contactors and replays
+Check earthing
+Check protection devices, bucholz, thermometer, pressure relief valves, etc"	 ','	2Y	'),
+(	1	,'	Visual inspection (General)	 ','	2W	'),
+(	1	,'	Cleaning and Dusting	 ','	2W	'),
+(	2	,'	"Inspection of insulators, earth connections, abnormal sounds, surge arrestors, current transformer, reactors, resistors, capacitor banks and steel works.
+Inspect all surfaces for pollution.
+Ensure ventilation for resisitors is free of obstructions"	 ','	1Y	'),
+(	2	,'	Repeat commissioning capacitance measurements on all capacitor in banks, check with HMI.	 ','	1Y	'),
+(	2	,'	Check all electrical connections by means of thermal imaging	 ','	6m	'),
+(	2	,'	"Inspection of insulators, earth connections, abnormal sounds, surge arrestors, current transformer, reactors, resistors, capacitor banks and steel works.
+Inspect all surfaces for pollution.
+Ensure ventilation for resisitors is free of obstructions"	 ','	1Y	'),
+(	2	,'	Visual inspection (General)	 ','	2W	'),
+(	2	,'	Cleaning and Dusting	 ','	2W	'),
+(	4	,'	Visual inspection (General)	 ','	2W	'),
+(	4	,'	Cleaning and Dusting	 ','	2W	'),
+(	5	,'	Visual inspection (General)	 ','	2W	'),
+(	5	,'	Cleaning and Dusting	 ','	2W	'),
+(	6	,'	Visual inspection of anti-condensation heaters, disconnectors, earthing switch, current and voltage transformers, circuit breakers, SF6 density gauges, surge arrestors, access platforms, etc	 ','	1Y	'),
+(	6	,'	Overhaul, performed by supplier	 ','	20Y	'),
+(	6	,'	Check earthing and coating. Repair if necessary	 ','	2Y	'),
+(	6	,'	Minor maintenance, performed by supplier	 ','	4Y	'),
+(	6	,'	Major maintenance, performed by supplier	 ','	12Y	'),
+(	6	,'	Log # of SA discharges, and switching operations. If close to 5000 switches has occurred, external maintenance is required	 ','	1Y	'),
+(	6	,'	Cleaning and Dusting	 ','	2W	'),
+(	7	,'	Check all electrical connections by means of thermal imaging	 ','	6M	'),
+(	7	,'	"Verify the operation and trip of Bucholz relay
+Diverter switch protection"	 ','	3Y	'),
+(	7	,'	"Visual inspection of DGA, oil level indicators, for both main tank, bushings, coolers, thermometer indicators, as well as the maximum temperature indicator, the pressure relief device.
+Ensure no corrosion is present at bushing terminations, and the gas accumulating indicator"	 ','	1Y	'),
+(	7	,'	Take oil sample and send to lab for testing	 ','	1Y	'),
+(	7	,'	"Ensure dehydrating breather is functional, and verify with HMI.
+Oil level monitors, and verify with HMI
+Dial thermometers and resistance thermometers, verify with HMI
+All pressure relief devices
+CTs and earthing
+Vent bleding screws
+Visual inspection of Hydrocal, oil level indicators, for both main tank, bushings, coolers, thermometer indicators, as well as the maximum temperature indicator, the pressure relief device.
+Ensure no corrosion is present at bushing terminations, and the gas accumulating indicator"	 ','	1Y	'),
+(	7	,'	Visual inspection (General)	 ','	2W	'),
+(	7	,'	Cleaning and Dusting	 ','	2W	'),
+(	8	,'	Visual inspection (General)	 ','	2W	'),
+(	8	,'	Cleaning and Dusting	 ','	2W	'),
+(	9	,'	Visual inspection (General)	 ','	2W	'),
+(	9	,'	Cleaning and Dusting	 ','	2W'	);
+
+
+use zt8bhfo1tcz5g9xf;
+SELECT  m.id as task_mide_id, o.id as task_ope_id, o.Maintenance_Frequency
+FROM mide m
+JOIN components c on m.component_id = c.id
+JOIN operation o on o.ope_comp_id = c.id;
+
+use zt8bhfo1tcz5g9xf;
+SELECT  t.id,t.task_mide_id,c.name ,c.component_code, m.code,o.Operation_Description, o.Maintenance_Frequency,t.last_date,t.next_date
+FROM tasks t
+JOIN mide m on t.task_mide_id = m.id
+JOIN components c on m.component_id = c.id
+JOIN operation o on o.id = t.task_ope_id
+where t.task_mide_id='1';
+
+
+create definer = root@localhost event Total_Sell on schedule
+    every '1' DAY
+        starts '2021-03-12 00:00:00'
+    on completion preserve
+    enable
+    do
+    BEGIN
+   insert into monitor_sell(TotalSell,updateDt) values
+   (Total_Sell(),now());
+
+END;
+
+use zt8bhfo1tcz5g9xf;
+drop procedure if exists upcoming_tasks;
+create procedure upcoming_tasks(IN dt date)
+   SELECT t.id
+FROM tasks t where t.next_date<dt;
+
+
+use zt8bhfo1tcz5g9xf;
+INSERT INTO components( name, package_id, module_id, component_code)
+VALUES ('HVAC',4,2,'HVAC-'),
+('CCTV',4,2,'CCTV-'),
+('Diesel Gen',4,2,'DG-'),
+('Waste Water Collection System',4,2,'WWCS-'),
+('LV MV Aux Power Transformer',4,2,'	APT-'),
+('Earthing Resistor',4,2,'ER-'),
+('Battery& Charger',4,2,'BC-'),
+('Land Cable',2,3,'LC-');
+
+use zt8bhfo1tcz5g9xf;
+INSERT INTO operation(ope_comp_id, Operation_Description, Maintenance_Frequency)
+VALUES (10	,'	Blower assembly is checked and cleaned.','1Y'),
+(10	,'	Clean ignition system.','1Y'),
+(10	,'	Clean combustion blower housing.	','1Y'),
+(10	,'	Clean/clear condensate lines, evaporator coil and drip pan.','1Y'),
+(10	,'	Clean burner assembly.','1Y'),
+(10	,'	Change Filters.','	1Y'),
+(10	,'	Lubricate moving parts.','2Y'),
+(10	,'	Changes bolts if needed	.','2Y'),
+(11	,'	Check that the cameras are securely attached to the wall.','6M'),
+(11	,'	Check camera housings for deterioration (environmental conditions).','6M'),
+(11	,'	Clean housing and free from dust	.','	6M'),
+(11	,'	Check lens focus and adjust as appropriate.','	6M'),
+(11	,'	Check field of view is as agreed at installation.','6M'),
+(11	,'	Check operation of night vision monitors (Playback last night recording)','6M'),
+(11	,'	Check connectors and cable entry points for loose wiring','	1Y'),
+(11	,'	Check cable are transmitting an adequate video signal to control room.','1Y'),
+(11	,'	Check Wiring for any wear and tear or exposed wires.	 ','1Y'),
+(11	,'	Check hard disk for possible errors.	 ','2Y'),
+(11	,'	Check operation of NVR/DVR cooling fans (if applicable) clean as necessary.','	2Y'),
+(11	,'	Check time, date stamp is correct and adjust as necessary.','	2Y'),
+(11	,'	Check Monitors are free from picture burn-in and distortion.','2Y'),
+(11	,'	Check Monitors have proper contrast and brightness.','2Y'),
+(12	,'	Change oil.','1Y'),
+(12	,'	Change oil filter, fuel filter, and air filter.','	1Y'),
+(12	,'	Flush cooling system.	','	1Y'),
+(12	,'	Inspect wiring/electrical system. ','1Y'),
+(12	,'	Change spark plugs.	 ','	1Y'),
+(12	,'	Test transfer switch.	 ','	1Y'),
+(13	,'	Clean	 ','	6M'),
+(13	,'	wrenching pumps	 ','	6M'),
+(13	,'	visula inspection	 ','	6M'),
+(14	,'	visula inspetion	 ','	6M'),
+(14	,'	check for oil leakages	 ','	6M'),
+(14	,'	check tempratures	 ','	6M'),
+(14	,'	check for loose connections	 ','	6M'),
+(15	,'Visual Inspection	 ','	6M'),
+(16	,'Battery Specific Gravity Checks	 ','	1Y'),
+(16	,'Battery voltage Checks	 ','	1Y'),
+(16	,'Float Voltage Level checks	 ','	1Y'),
+(16	,'7.5 Battery Impedance Test	 ','	1Y'),
+(16	,'Perform visual and mechanical Inspection of the charger to ensure all wiring and components are in good condition and electrical connections are tight	 ','	1Y	 '),
+(4,'	General visual Inspection of;
+HV array cables integrity and routing, check if array cables are dispaced by sea bed movements.
+Check accessories and assure there is no loose connection or cable distress.
+Check for corrosion in cable hang-offs, cleats or fixings.
+Check FO cable integrityincluding FO connection box . ','1Y'),
+(4	,'	"General visual inspection
+Inside switchgear cable compartment for HV array cable terminations integrity"	 ','	6Y'),
+(4	,'	"Routine 12Y interval (Outage) in addition to the WTG Gen BOP & 6Y checks.
+Visual inspection and perform test of HV cable earth Link (low resistance ohmeter)."	 ','	12Y'),
+(5	,'	Routine 6M Inspection.
+Offshore Substation Visual check pn Terminations,  Link Box, Fibre  Optic Boxes, and other connections. Check if there are any loose connection or damage/distress.	 ','	6M'),
+(5	,'	1#Conduct tests as per manufacturers proposal	 ','	1Y'),
+(5	,'	2#Conduct tests as per manufacturers proposal	 ','	2Y'),
+(5	,'	3#Conduct tests as per manufacturers proposal	 ','5Y'),
+(5	,'	Consider optional OTDR and TDR of the onshore and offshore submarine export cables to investigate if there have been any damage.	 ','	12Y	'),
+(17	,'	"Routine 6M Inspection of HV Terminations at Onshore substation.
+Visual check on Terminations and Surge Arrestors. Check if there are leakages, discharge, or hotspots.  "	 ','	6M	'),
+(17	,'	Routine 1Y Annual Inspection of HV Accessories at cable connection at substation, land cable routes and Transition Joint.
+Visual check  on Terminations / , Earth Link Box, Fibre Optic boxes, connections to HV earthing system, cleats and  support structures. Check if there are leakages, discharge, or hotspots.    "	 ','	1Y	'),
+(17	,'	Routine 5Y interval Test (Outage) as per CIGRE TB797.
+Low resistance test of Earthing arrangements and link box. Check for moisture ingress, corrosion.  Clean if necessary.
+Do tests as per manufacturers proposal.','5Y');
+
+use zt8bhfo1tcz5g9xf;
+SELECT  m.id as task_mide_id, o.id as task_ope_id, o.Maintenance_Frequency
+                FROM mide m
+                JOIN components c on m.component_id = c.id
+                JOIN operation o on o.ope_comp_id = c.id
+where m.id=38;
+
+
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '317');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '318');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '319');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '320');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '321');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '322');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '323');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '465');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '466');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '467');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '460');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '461');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '462');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '463');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '464');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '459');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '455');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '456');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '457');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '458');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '452');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '453');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '454');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '446');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '447');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '448');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '449');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '450');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '451');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '432');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '433');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '434');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '435');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '436');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '437');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '438');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '439');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '440');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '441');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '442');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '443');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '444');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '445');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '424');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '425');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '426');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '427');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '428');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '429');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '430');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '431');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '373');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '374');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '375');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '376');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '377');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '378');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '379');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '366');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '367');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '368');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '369');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '370');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '371');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '372');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '359');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '360');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '361');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '362');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '363');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '364');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '365');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '352');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '353');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '354');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '355');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '356');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '357');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '358');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '286');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '287');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '288');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '345');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '346');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '347');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '348');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '338');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '339');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '340');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '341');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '342');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '343');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '344');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '331');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '332');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '333');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '334');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '335');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '336');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '337');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '265');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '266');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '267');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '324');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '325');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '326');
+DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '327');
+
+Offshore HDD Punch-out 
+bathymetry checks 2Y

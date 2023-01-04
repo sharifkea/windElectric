@@ -16,7 +16,7 @@
 		</header>
 		<body>
 			<div id="login">
-				<input class="login" id = "user" type="text" name="email" placeholder="Company License" required /><br>
+				<input class="login" id = "user" type="email" name="email" placeholder="E-mail" required /><br>
 				<input class="login" id = "pass" type="password" name="password" placeholder="Password" required /><br>
 				<button type= "submite" onclick=login() name="submit" class="button">Login</button>
 			</div>

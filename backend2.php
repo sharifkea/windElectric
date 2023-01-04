@@ -106,11 +106,13 @@
             else echo '14 No Com Id';
         }    
         if($_REQUEST['Number']==15){
-            if(isset($_REQUEST['company'],$_REQUEST['password'])){
-                $returnValue=$service->getUser($_REQUEST['company'],$_REQUEST['password']); 
-                if(isset($returnValue[0]['id'])){
-                    $_SESSION['company']=$_REQUEST['company'];
-                    $_SESSION['user']=$returnValue[0]['id'];
+            if(isset($_REQUEST['email'],$_REQUEST['password'])){
+                $returnValue=$service->getUser($_REQUEST['email']); 
+                if(password_verify($_REQUEST['password'], $returnValue[0]['password'])){
+                    $_SESSION['email']=$_REQUEST['email'];
+                    $_SESSION['userName']=$returnValue[0]['first_name'].' '.$returnValue[0]['last_name'];
+                    $_SESSION['admin']=$returnValue[0]['admin'];
+                    $_SESSION['id']=$returnValue[0]['id'];
                     //if($returnValue["id"]=='1'){$returnValue["id"]='5';}
                     echo json_encode($returnValue);
                 }
@@ -148,46 +150,43 @@
             else echo '20 No Com Id';
         }
         if($_REQUEST['Number']==21){
-            $_FILES=$_REQUEST['file'];
-            if(isset($_FILES)){
-                //require_once 'src/data.php';
-                $service = new data;
-                $statusMsg = '';
-                //echo '<script>console.log("'.$_FILES.'")</script>';
-                
-                // File upload path
-                $targetDir = "uploads/";
-                $fileName = $_FILES["name"];
-                $targetFilePath = $targetDir . $fileName;
-                $fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
-                
-                if(!empty($_FILES["name"])){
-                    // Allow certain file formats
-                    $allowTypes = array('jpg','png','jpeg','gif','pdf');
-                    if(in_array($fileType, $allowTypes)){
-                        move_uploaded_file($_FILES["tmp_name"], $targetFilePath);
-                        $statusMsg = "The file ".$fileName. " has been uploaded successfully.";
-                        // Upload file to server
-                        /*if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
-                            //$insert=$service->intoImg($fileName);
-                            if($insert){
-                                $statusMsg = "The file ".$fileName. " has been uploaded successfully.";
-                            }else{
-                                $statusMsg = "File upload failed, please try again. Changing image name might help!";
-                            } 
-                        }else{
-                            $statusMsg = "Sorry, there was an error uploading your file.";
-                        }*/
-                    }else{
-                        $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
-                    }
-                }else{
-                    $statusMsg = 'Please select a file to upload.';
-                }
-                echo $statusMsg;
-                // Display status message
+            if(isset($_REQUEST['cId'], $_REQUEST['cNo'], $_REQUEST['dId'], $_REQUEST['date'])){
+            $returnValue=$service->insConNum($_REQUEST['cId'],$_REQUEST['cNo'], $_REQUEST['dId'], $_REQUEST['date']);
+            echo json_encode($returnValue);
+            }
+            else echo 'No:21 Mid Id';
+        }  
+        if($_REQUEST['Number']==22){
+            if(isset($_REQUEST['cId'], $_REQUEST['oD'], $_REQUEST['mF'],$_REQUEST['dId'], $_REQUEST['date'])){
+            $returnValue=$service->insOpe($_REQUEST['cId'],$_REQUEST['oD'], $_REQUEST['mF'],$_REQUEST['dId'], $_REQUEST['date']);
+            echo json_encode($returnValue);
+            }
+            else echo 'No:22 Mid Id';
+        }             
+        if($_REQUEST['Number']==23){
+            if(isset($_REQUEST['email'])){
+                if(findEmail($_REQUEST['email'])!=0) echo 1;
+                else echo 0;
+
                 }
             else echo '21No Com Id';
+        }
+        if($_REQUEST['Number']==24){
+            if(isset($_REQUEST['Email'])){
+                foreach($_REQUEST as $x => $x_value) {
+                    //echo $x;
+                    if(!is_array($_REQUEST[$x])){
+                        $_REQUEST[$x]=htmlspecialchars(strip_tags($_REQUEST[$x]));
+                        $_REQUEST[$x] = preg_replace('/\s+/', ' ', $_REQUEST[$x]);
+                        if ((empty($_REQUEST[$x]))||($_REQUEST[$x]==' ')) $_REQUEST[$x]='';
+                        
+                    }
+                    //$key.=$x;
+                }
+                $returnValue=$service->addUser($_REQUEST);
+                echo $returnValue;
+                }
+            else echo '24No Com Id';
         }
           
         

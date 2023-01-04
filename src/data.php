@@ -36,22 +36,22 @@ class data extends DB{
             if(isset($value[$x]))$value[$x]=$this->sqlInjection($value[$x]);
         }
         try{
-            if($value['note']!=null&&$value['history_mide_id']!=null&&$value['image_name']==null){
+            if($value['note']!=null&&$value['history_mide_id']!=null&&$value['image_name']==null&&$value['user_email']!=null){
                 $query = <<<'SQL'
-                        INSERT INTO history (note,history_mide_id) VALUES (?,?);
+                        INSERT INTO history (note,history_mide_id,user_email) VALUES (?,?,?);
                 SQL;
                 $stmt = $newDb->pdo->prepare($query);
-                $stmt->execute([$value['note'],$value['history_mide_id']]);
+                $stmt->execute([$value['note'],$value['history_mide_id'],$value['user_email']]);
                 $newID = $newDb->pdo->lastInsertId();
                 $newDb->disconnect();
                 return true;
             }
-            else if($value['note']!=null&&$value['history_mide_id']!=null&&$value['image_name']!=null){
+            else if($value['note']!=null&&$value['history_mide_id']!=null&&$value['image_name']!=null&&$value['user_email']!=null){
                 $query = <<<'SQL'
-                        INSERT INTO history (note,history_mide_id,image_name) VALUES (?,?,?);
+                        INSERT INTO history (note,history_mide_id,image_name,user_email) VALUES (?,?,?,?);
                 SQL;
                 $stmt = $newDb->pdo->prepare($query);
-                $stmt->execute([$value['note'],$value['history_mide_id'],$value['image_name']]);
+                $stmt->execute([$value['note'],$value['history_mide_id'],$value['image_name'],$value['user_email']]);
                 $newID = $newDb->pdo->lastInsertId();
                 $newDb->disconnect();
                 return true;
@@ -314,17 +314,7 @@ class data extends DB{
             return false;
         }
     }
-    
-    function getUser($user,$pass){
-        $query = <<<'SQL'
-            SELECT  id FROM users
-            where company=? and password=?;          
-        SQL;
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([$user,$pass]);
-        $this->disconnect();
-        return $stmt->fetchAll();
-    }
+
     function getMideWComCode($comCode){
         $query = <<<'SQL'
             SELECT  *
@@ -338,6 +328,54 @@ class data extends DB{
         return $stmt->fetchAll();
     
     }
+    function addUser($data) { //registration
+        if(!isset($data['Phone']))$data['Phone']=null;
+        if(!isset($data['Admin']))$data['Admin']=0;
+        else $data['Admin']=1;
+        $newID=0;
+       try{
+            $query = <<<'SQL'
+                INSERT INTO users (first_name,last_name,password,phone,email,admin) VALUES (?,?,?,?,?,?);
+            SQL;
+
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([$data['FirstName'],$data['LastName'],password_hash($data['Password'], PASSWORD_DEFAULT),$data['Phone'],$data['Email'],$data['Admin']]);
+            $newID = $this->pdo->lastInsertId();
+            $this->disconnect();
+            if($newID!=0)return true;
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
+    
+    function findEmail($email) { //look for email address
+        $email=$this->sqlInjection($email);
+        $id=0;
+       
+        $query = <<<'SQL'
+            SELECT id FROM users WHERE email=?;  
+        SQL;
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$email]);                
+        $this->disconnect();
+        if($stmt->fetchAll())return $stmt->fetchAll();
+        else return $id; 
+    }
+
+    function getUser($user) { //look for email address
+        $user=$this->sqlInjection($user);
+        //$pass=$this->sqlInjection($pass);
+        $query = <<<'SQL'
+            SELECT  * FROM users
+            where email=?;          
+        SQL;
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$user]);
+        $this->disconnect();
+        return $stmt->fetchAll();
+    }
+
     
     
 

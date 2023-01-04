@@ -53,7 +53,7 @@ function login(){ /* Belongs to login.php 'to verify user and password'*/
   console.log(user,pass);
   if(user!=""&&pass!="")
   {
-    let num='Number=15&company='+user+'&password='+pass;
+    let num='Number=15&email='+user+'&password='+pass;
     $.ajax({
       url: "backend2.php?"+num,
       type: "GET",
@@ -63,13 +63,13 @@ function login(){ /* Belongs to login.php 'to verify user and password'*/
         console.log(x);
         console.log(x['0']['id']);
         if(x['0']['id']=='0')
-        alert ("Invalide License or Password.");
+        alert ("Invalide Email or Password.");
         else  window.location.href ='index.php';
       }
     });
   }
   else{
-    alert ("Invalide Company Name or Password.");
+    alert ("Invalide Email or Password.");
   }
 }
 
@@ -249,7 +249,8 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
       append($("<th />", { "text": "Component Number"})).
       append($("<th />", { "text": "Note"})).
       append($("<th />", { "text": "Image"})).
-      append($("<th />", { "text": "Date & Time"}))
+      append($("<th />", { "text": "Date & Time"})).
+      append($("<th />", { "text": "User"}))
       header.append(headerRow);
       table.append(header);
       let tableBody = $("<tbody />");
@@ -277,6 +278,7 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
                     <td class='other'>${data[i].note}</td>
                     <td class='other'>${ImageData}</td>
                     <td class='other'>${data[i].date_time}</td>
+                    <td class='other'>${data[i].user_email}</td>
                     </tr>`
         tableBody.append(tr);
       }
@@ -313,6 +315,7 @@ function addHistory(opt){/* when add botton clicked in history table, to save No
     let comCode = document.getElementById("nh").name;
     let code = document.getElementById("addNH").name;
     let mide = document.getElementById("mide").value;
+    console.log(userEmail);
     console.log(history,comCode,code,mide);
     console.log(file);
     let image_name = '';
@@ -320,7 +323,7 @@ function addHistory(opt){/* when add botton clicked in history table, to save No
       var property = file.files[0];
       image_name= property.name;
     }
-    let num='Number=2&note='+history+'&history_mide_id='+mide+'&image_name='+image_name;
+    let num='Number=2&note='+history+'&history_mide_id='+mide+'&image_name='+image_name+'&user_email='+userEmail;
     console.log(num);
     $.ajax({
       url: "backend2.php?"+num,
@@ -532,7 +535,8 @@ function getTable(m,data){ /*returns all history as table for histortPageStart()
     append($("<th />", { "text": "Component Number"})).
     append($("<th />", { "text": "Note"})).
     append($("<th />", { "text": "Image"})).
-    append($("<th />", { "text": "Date & Time"}))
+    append($("<th />", { "text": "Date & Time"})).
+    append($("<th />", { "text": "User"}))
     header.append(headerRow);
     table.append(header);
     let tableBody = $("<tbody />");
@@ -560,6 +564,7 @@ function getTable(m,data){ /*returns all history as table for histortPageStart()
                   <td class='other'>${data[i].note}</td>
                   <td class='other'>${ImageData}</td>
                   <td class='other'>${data[i].date_time}</td>
+                  <td class='other'>${data[i].user_email}</td>
                   </tr>`
       tableBody.append(tr);
     }

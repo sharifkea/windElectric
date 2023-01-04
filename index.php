@@ -12,16 +12,22 @@ if(isset($_SESSION['farm'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="refresh" content="900;url=logout.php" />
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
+    <script src="js/jquery-3.5.1.min.js"></script>
     <script src="js/function.js"></script>
     <title>SWf</title>
 </head>
 		<header>
-			<h1 id="in">Fleets of <?php echo $_SESSION['company']; ?></h1>
+			<h1 id="in">Fleets of <?php echo 'Wind Electric'; ?></h1>
+            <p> Wellcom:<?php echo $_SESSION['userName']; if($_SESSION['admin']==1) echo ' (Admin)'?></p>
             
 		</header>
         <nav>
             <section id="outSec">
+                <?php if($_SESSION['admin']==1) { ?>
+                <a href="log.php" class="main" id="log">Log</a>
+                <a href="users.php" class="main" id="user">Users</a><?php } ?>
                 <a href="logout.php" class="main" id="logout">Logout</a>
             </section>
         </nav>

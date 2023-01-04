@@ -629,14 +629,31 @@ h1#in{
 }
 a#logout{
   float: right;
-  width: 100px;
-  height: 31px;
+  padding-left: 16px;
+    padding-bottom: 5px;
   text-align: center;
   color: white;
-  border-radius: 30px;
+  border-radius: 10px;
   background-color: rgb(86, 119, 131);;
 }
-
+a#log{
+    text-align: center;
+    margin: 33px;
+    padding-left: 16px;
+    padding-bottom: 5px;
+    color: white;
+    border-radius: 10px;
+    background-color: rgb(86, 119, 131);
+}
+a#user{
+    text-align: center;
+    margin: 33px;
+    padding-left: 16px;
+    padding-bottom: 5px;
+    color: white;
+    border-radius: 10px;
+    background-color: rgb(86, 119, 131);
+}
 div#swfAll{
   display: flex;
   flex-wrap: wrap;
