@@ -109,12 +109,18 @@
             if(isset($_REQUEST['email'],$_REQUEST['password'])){
                 $returnValue=$service->getUser($_REQUEST['email']); 
                 if(password_verify($_REQUEST['password'], $returnValue[0]['password'])){
-                    $_SESSION['email']=$_REQUEST['email'];
-                    $_SESSION['userName']=$returnValue[0]['first_name'].' '.$returnValue[0]['last_name'];
-                    $_SESSION['admin']=$returnValue[0]['admin'];
-                    $_SESSION['id']=$returnValue[0]['id'];
-                    //if($returnValue["id"]=='1'){$returnValue["id"]='5';}
-                    echo json_encode($returnValue);
+                    if($returnValue[0]['log_in']==1){
+                        $x['0']['id']='in'; echo json_encode($x);
+                    }
+                    else{
+                        $ret=$service->userLog($returnValue[0]['id'],'1');
+                        $_SESSION['email']=$_REQUEST['email'];
+                        $_SESSION['userName']=$returnValue[0]['first_name'].' '.$returnValue[0]['last_name'];
+                        $_SESSION['admin']=$returnValue[0]['admin'];
+                        $_SESSION['id']=$returnValue[0]['id'];
+                        $_SESSION['inTime']=date('Y-m-d H:i:s');
+                        echo json_encode($returnValue);
+                    }
                 }
                 else {$x['0']['id']='0'; echo json_encode($x);}
                 //echo $_REQUEST['mideId'];
@@ -187,6 +193,16 @@
                 echo $returnValue;
                 }
             else echo '24No Com Id';
+        }
+        if($_REQUEST['Number']==25){
+            if(isset($_REQUEST['in_time'],$_REQUEST['id'])){
+                $time=date('Y-m-d H:i:s');
+                $retu=$service->insLog($_SESSION['id'],$_SESSION['inTime'],$time);
+                $returnValue=$service->userLog($_REQUEST['id'],'0');
+                session_destroy();
+                echo $returnValue;
+            }
+            else echo '25No Com Id';
         }
           
         

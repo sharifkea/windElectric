@@ -29,6 +29,8 @@ $_SESSION['countMonth']=$count;
 	<script src="js/jquery-3.5.1.min.js"></script>
     <script type="text/javascript">
     var userEmail='<?php echo $_SESSION['email'];?>';
+    var userId='<?php echo $_SESSION['id'];?>';
+    var inTime='<?php echo $_SESSION['inTime'];?>';
     </script>
     <script type="text/javascript" src="js/function.js"></script>
     <title>wind-electric</title>

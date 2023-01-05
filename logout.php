@@ -1,9 +1,13 @@
 <?php
-session_start();
-// Destroying All Sessions
-if(session_destroy())
-{
-// Redirecting To Home Page
-header("Location: login.php");
-}
-?>
+ require_once 'src/data.php';    
+    include ('header.php');
+?>  
+        
+        </section>  
+    </nav>
+    <body>
+        <script>
+            logOut();
+        </script>
+    </body>
+</html>

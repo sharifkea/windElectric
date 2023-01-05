@@ -64,7 +64,9 @@ function login(){ /* Belongs to login.php 'to verify user and password'*/
         console.log(x['0']['id']);
         if(x['0']['id']=='0')
         alert ("Invalide Email or Password.");
-        else  window.location.href ='index.php';
+        else if(x['0']['id']=='in')
+        alert ("You are now logged in on another device. If not contact admin.");
+        else window.location.href ='index.php';
       }
     });
   }
@@ -781,10 +783,23 @@ function getTaskTableUp(data){ /* returns table for upcomming.php and upcommonth
 
 $(document).delegate("#span", "click", function(e) { /* to exit from modal*/
     let modal = document.getElementById("myModal");
-    //window.location.href ='home.php';
+    //
       modal.style.display = "none";
 }); 
 function closeImgModal() { /* to exit from Image modal*/
   var modal = document.getElementById("imgModal");
   modal.style.display = "none";
-} 
+}
+function logOut() {
+  console.log(userId,inTime);
+  let num='Number=25&in_time='+inTime+'&id='+userId;
+    $.ajax({
+        url: "backend2.php?"+num,
+        type: "GET",
+        success: function(data) { 
+            console.log(data);
+            if (data)window.location.href ='login.php';
+        }     
+    });
+
+}

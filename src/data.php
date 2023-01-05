@@ -376,9 +376,51 @@ class data extends DB{
         return $stmt->fetchAll();
     }
 
-    
-    
 
+
+    function userLog($id,$data) { //change log_in column at log in or log out
+        $newId=intval($id);
+        $newData=intval($data);
+        //if($data='1')$newData=1;else $newData=0;
+        $newDb = new DB;
+        try{
+            
+            if(!isset($newId,$newData)) {
+                throw new Exception("no data");
+              }
+            $query = <<<'SQL'
+                update users 
+                set log_in=? 
+                    WHERE id=?;
+            SQL;
+            $stmt = $newDb->pdo->prepare($query);
+            $stmt->execute([$newData,$newId]);
+            $newDb->disconnect();
+
+            return true;
+        }catch(Exception $e)
+        {
+            return false;
+        }
+    }
+    
+    function insLog($id,$in_time,$out_time){
+        $id=intval($id);
+        $newID=0;
+        try{
+            $query = <<<'SQL'
+                INSERT INTO log (user_id, log_in, log_out) values (?,?,?);
+            SQL;
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([$id,$in_time,$out_time]);
+            $newID = $this->pdo->lastInsertId();
+            $this->disconnect();
+            if($newID!=0)return true;
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
     function sqlInjection($data){
         
         $data=htmlspecialchars(strip_tags($data));
