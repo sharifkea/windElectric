@@ -421,6 +421,46 @@ class data extends DB{
             return false;
         }
     }
+    function getLog() { //look for email address
+        //$user=$this->sqlInjection($user);
+        //$pass=$this->sqlInjection($pass);
+        $query = <<<'SQL'
+            SELECT  u.email as "User E-mail",l.log_in as "Signed In at", l.log_out as "Signed Out at"
+            FROM log l
+            join users u on l.user_id = u.id
+            order by -l.id;          
+        SQL;
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([]);
+        $this->disconnect();
+        return $stmt->fetchAll();
+    }
+    function getAllUsers(){
+        $query = <<<'SQL'
+            SELECT  id as "User Id", email as "E-mail Address", first_name as "First Name", last_name as "Last Name", admin as "Status", phone as "Phone", log_in as "Currently"
+        FROM users;         
+        SQL;
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([]);
+        $this->disconnect();
+        return $stmt->fetchAll();
+    }
+
+    function delUser($id){
+        $taskId=intval($id);
+        try{
+            $query = <<<'SQL'
+            delete from users where id=?;
+            SQL;
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([$taskId]);
+            $this->disconnect();
+            return $stmt->rowCount();
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
     function sqlInjection($data){
         
         $data=htmlspecialchars(strip_tags($data));
@@ -431,6 +471,7 @@ class data extends DB{
         return $data;
         
     }
+    
 }
     
    

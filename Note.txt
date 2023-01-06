@@ -7,4 +7,9 @@ $_SESSION['admin']=admin or not 1/0;
 $_SESSION['id']=user id.
 isset($_SESSION['farm']= farm number selected by user.
 
+Global variables
+var userEmail='<?php echo $_SESSION['email'];?>';
+var userId='<?php echo $_SESSION['id'];?>';
+var inTime='<?php echo $_SESSION['inTime'];?>';
+
 

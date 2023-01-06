@@ -16,23 +16,23 @@
             echo $age["Ben"];*/ 
             echo json_encode($returnValue);
         }
-        if($_REQUEST['Number']==2){
+        else if($_REQUEST['Number']==2){
             $returnValue=$service->insertHistory($_REQUEST);
             echo $returnValue;
         }
-        if($_REQUEST['Number']==3){
+        else if($_REQUEST['Number']==3){
             $returnValue=$service->taskOne();
             echo json_encode($returnValue);
         }
-        if($_REQUEST['Number']==4){
+        else if($_REQUEST['Number']==4){
             $returnValue=$service->insertTask($_REQUEST);
             echo $returnValue;
         }
-        if($_REQUEST['Number']==5){
+        else if($_REQUEST['Number']==5){
             $returnValue=$service->getComponents(); 
             echo json_encode($returnValue);
         }
-        if($_REQUEST['Number']==6){
+        else if($_REQUEST['Number']==6){
             if(isset($_REQUEST['comId'])){
                 $returnValue=$service->getMideWComId($_REQUEST['comId']); 
                 echo json_encode($returnValue);
@@ -40,7 +40,7 @@
             }
             else echo 'No Com Id';
         }
-        if($_REQUEST['Number']==7){
+        else if($_REQUEST['Number']==7){
             if(isset($_REQUEST['mideId'])){
                 $returnValue=$service->getTask($_REQUEST['mideId']); 
                 echo json_encode($returnValue);
@@ -48,7 +48,7 @@
             }
             else echo 'No Com Id';
         }
-        if($_REQUEST['Number']==8){
+        else if($_REQUEST['Number']==8){
             if(isset($_REQUEST['mideId'])){
                 $returnValue=$service->getHistoryWM($_REQUEST['mideId']); 
                 echo json_encode($returnValue);
@@ -56,7 +56,7 @@
             }
             else echo 'No Com Id';
         } 
-        if($_REQUEST['Number']==9){
+        else if($_REQUEST['Number']==9){
             if(isset($_REQUEST['comCode'])&& isset($_REQUEST['code'])){
                 $returnValue=$service->getTaskWCC($_REQUEST['comCode'],$_REQUEST['code']); 
                 echo json_encode($returnValue);
@@ -64,13 +64,13 @@
             }
             else echo 'No Com Id';
         }    
-        if($_REQUEST['Number']==10){
+        else if($_REQUEST['Number']==10){
                 $returnValue=$service->getUpAll(); 
                 echo json_encode($returnValue);
                 //echo $_REQUEST['mideId'];
             
         }      
-        if($_REQUEST['Number']==11){
+        else if($_REQUEST['Number']==11){
             if(isset($_REQUEST['taskId'])){
                 $returnValue=$service->delUp($_REQUEST['taskId']); 
                 if($returnValue==1){
@@ -81,7 +81,7 @@
             }
             else echo '11 No Com Id';
         }   
-        if($_REQUEST['Number']==12){
+        else if($_REQUEST['Number']==12){
             if(isset($_REQUEST['id'],$_REQUEST['last_date'], $_REQUEST['next_date'])){
                 $returnValue=$service->setTask($_REQUEST['id'],$_REQUEST['last_date'], $_REQUEST['next_date']); 
                 echo json_encode($returnValue);
@@ -89,7 +89,7 @@
             }
             else echo '12 No Com Id';
         }   
-        if($_REQUEST['Number']==13){
+        else if($_REQUEST['Number']==13){
             if(isset($_REQUEST['date'])){
                 $returnValue=$service->getTaskDate($_REQUEST['date']); 
                 echo json_encode($returnValue);
@@ -97,7 +97,7 @@
             }
             else echo '13 No Com Id';
         }   
-        if($_REQUEST['Number']==14){
+        else if($_REQUEST['Number']==14){
             if(isset($_REQUEST['id'])){
                 $returnValue=$service->insUp($_REQUEST['id']); 
                 echo json_encode($returnValue);
@@ -105,7 +105,7 @@
             }
             else echo '14 No Com Id';
         }    
-        if($_REQUEST['Number']==15){
+        else if($_REQUEST['Number']==15){
             if(isset($_REQUEST['email'],$_REQUEST['password'])){
                 $returnValue=$service->getUser($_REQUEST['email']); 
                 if(password_verify($_REQUEST['password'], $returnValue[0]['password'])){
@@ -128,7 +128,7 @@
             }
             else echo '15 No Com Id';
         } 
-        if($_REQUEST['Number']==16){
+        else if($_REQUEST['Number']==16){
             if(isset($_REQUEST['id'])){
                 $returnValue=$service->insUpM($_REQUEST['id']); 
                 echo json_encode($returnValue);
@@ -136,18 +136,18 @@
             }
             else echo '14 No Com Id';
         }
-        if($_REQUEST['Number']==17){
+        else if($_REQUEST['Number']==17){
             $returnValue=$service->getUpAllM(); 
             echo json_encode($returnValue);
             //echo $_REQUEST['mideId'];
         } 
-        if($_REQUEST['Number']==18){
+        else if($_REQUEST['Number']==18){
             
             $returnValue=$service->delAllM(); 
             echo json_encode($returnValue);
             //echo $_REQUEST['mideId'];
         }    
-        if($_REQUEST['Number']==20){
+        else if($_REQUEST['Number']==20){
             if(isset($_REQUEST['comCode'])){
                 $returnValue=$service->getMideWComCode($_REQUEST['comCode']); 
                 echo json_encode($returnValue);
@@ -155,29 +155,29 @@
             }
             else echo '20 No Com Id';
         }
-        if($_REQUEST['Number']==21){
+        else if($_REQUEST['Number']==21){
             if(isset($_REQUEST['cId'], $_REQUEST['cNo'], $_REQUEST['dId'], $_REQUEST['date'])){
             $returnValue=$service->insConNum($_REQUEST['cId'],$_REQUEST['cNo'], $_REQUEST['dId'], $_REQUEST['date']);
             echo json_encode($returnValue);
             }
             else echo 'No:21 Mid Id';
         }  
-        if($_REQUEST['Number']==22){
+        else if($_REQUEST['Number']==22){
             if(isset($_REQUEST['cId'], $_REQUEST['oD'], $_REQUEST['mF'],$_REQUEST['dId'], $_REQUEST['date'])){
             $returnValue=$service->insOpe($_REQUEST['cId'],$_REQUEST['oD'], $_REQUEST['mF'],$_REQUEST['dId'], $_REQUEST['date']);
             echo json_encode($returnValue);
             }
             else echo 'No:22 Mid Id';
         }             
-        if($_REQUEST['Number']==23){
+        else if($_REQUEST['Number']==23){
             if(isset($_REQUEST['email'])){
-                if(findEmail($_REQUEST['email'])!=0) echo 1;
+                if($service->findEmail($_REQUEST['email'])!=0) echo 1;
                 else echo 0;
 
                 }
             else echo '21No Com Id';
         }
-        if($_REQUEST['Number']==24){
+        else if($_REQUEST['Number']==24){
             if(isset($_REQUEST['Email'])){
                 foreach($_REQUEST as $x => $x_value) {
                     //echo $x;
@@ -194,19 +194,30 @@
                 }
             else echo '24No Com Id';
         }
-        if($_REQUEST['Number']==25){
-            if(isset($_REQUEST['in_time'],$_REQUEST['id'])){
-                $time=date('Y-m-d H:i:s');
-                $retu=$service->insLog($_SESSION['id'],$_SESSION['inTime'],$time);
-                $returnValue=$service->userLog($_REQUEST['id'],'0');
-                session_destroy();
-                echo $returnValue;
-            }
-            else echo '25No Com Id';
+        else if($_REQUEST['Number']==25){
+            $time=date('Y-m-d H:i:s');
+            $retu=$service->insLog($_SESSION['id'],$_SESSION['inTime'],$time);
+            $returnValue=$service->userLog($_SESSION['id'],'0');
+            session_destroy();
+            echo $returnValue;
+            
         }
-          
-        
-    
+        else if($_REQUEST['Number']==26){
+            $returnValue=$service->getLog(); 
+            echo json_encode($returnValue);
+        }    
+        else if($_REQUEST['Number']==27){
+            $returnValue=$service->getAllUsers(); 
+            echo json_encode($returnValue);
+        } 
+        else if($_REQUEST['Number']==28){
+            if(isset($_REQUEST['id'])){
+                $returnValue=$service->delUser($_REQUEST['id']); 
+                echo json_encode($returnValue);
+                //echo $_REQUEST['mideId'];
+            }
+            else echo '28 No Com Id';
+        }   
         else echo false;
         //else  $_SESSION['Number'] =1;
     // echo ($_SESSION['Number']);

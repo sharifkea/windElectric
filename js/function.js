@@ -100,10 +100,9 @@ function ptCall(name,comCode,code){ /* to get Tasks on modal*/
     let count=data.length;
     console.log(count);
     
-      const table = $("<h1 class='hh'>"+data[0].name+"</h1>");
-      table.append($("<p class='pp'>Number:"+data[0].component_code+data[0].code+"</p>"));
-      console.log(table);
-      table.append($("<table class='center' />"));
+      const th = $("<h1 class='hh'>"+data[0].name+"</h1>");
+      th.append($("<p class='pp'>Number:"+data[0].component_code+data[0].code+"</p>"));
+      const table=($("<table />", { "class":  "center"}));
       const header = $("<thead />");
       const headerRow = $("<tr />");
       headerRow.
@@ -143,7 +142,8 @@ function ptCall(name,comCode,code){ /* to get Tasks on modal*/
           tableBody.append(tr);
         }
       table.append(tableBody);
-    return (table);
+      th.append(table);
+    return (th);
 }
 
 function getHistoryFT(mideId,opt){/* returns history */
@@ -232,16 +232,16 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
     
     
     let name=data[0].componentName, comCode=data[0].component_code, code=data[0].code, mide_id=data[0].mide_id;  
-    const table = $("<h1 class='hh'>"+name+"</h1>");
-    table.append($("<p class='pp'>Number:"+comCode+code+"</p>"));
-    table.append($('<label for="fname">Write New Note:</label>'));
-    table.append($("<input type='text' name='"+comCode+"' placeholder='New Note' id='nh' /><br>"));
-    table.append($('<label for="fname">Select an Image File to Upload:</label>'));
-    table.append($('<input id="file" type="file" name="file" accept="image/jpeg, image/png, image/jpg"></input><br>'));
-    table.append($('<input name="'+code+'" type="submit" value="Add" id="addNH" onclick="addHistory('+opt+')"/> </div>'));
-    console.log(table);
+    const th = $("<h1 class='hh'>"+name+"</h1>");
+    th.append($("<p class='pp'>Number:"+comCode+code+"</p>"));
+    th.append($('<label for="fname">Write New Note:</label>'));
+    th.append($("<input type='text' name='"+comCode+"' placeholder='New Note' id='nh' /><br>"));
+    th.append($('<label for="fname">Select an Image File to Upload:</label>'));
+    th.append($('<input id="file" type="file" name="file" accept="image/jpeg, image/png, image/jpg"></input><br>'));
+    th.append($('<input name="'+code+'" type="submit" value="Add" id="addNH" onclick="addHistory('+opt+')"/> </div>'));
+    console.log(th);
     if(typeof data[0].note!=='undefined')
-      {table.append($("<table class='center' />"));
+      {const table=($("<table />", { "class":  "center"}));
       const header = $("<thead />");
       const headerRow = $("<tr />");
       headerRow.
@@ -285,10 +285,12 @@ function getHistoyrTable(data,opt){ /*returns table of history for getHistoryFT(
         tableBody.append(tr);
       }
       table.append(tableBody);
+      th.append(table);
     }
-    else{table.append($("<p class='pp'>No Note found. </p>"));}
-    table.append($("<input type='hidden' id='mide' value='"+mide_id+"' placeholder='New Note' id='nh' />"));
-    return (table);
+    else{th.append($("<p class='pp'>No Note found. </p>"));}
+    th.append($("<input type='hidden' id='mide' value='"+mide_id+"' placeholder='New Note' id='nh' />"));
+
+    return (th);
 }
 function imgModal(id){ /*to display Image in Modal*/
   console.log(id);
@@ -525,9 +527,8 @@ function getTable(m,data){ /*returns all history as table for histortPageStart()
     let count=data.length;
     let ImageData='';
     console.log(count);
-    const table = $("<h1 class='hh'>"+m+"</h1>");
-    console.log(table);
-    table.append($("<table class='center' />"));
+    const th = $("<h1 class='hh'>"+m+"</h1>");
+    const table=($("<table />", { "class":  "center"}));
     const header = $("<thead />");
     const headerRow = $("<tr />");
     headerRow.
@@ -571,7 +572,8 @@ function getTable(m,data){ /*returns all history as table for histortPageStart()
       tableBody.append(tr);
     }
     table.append(tableBody);
-    return (table);
+    th.append(table);
+    return (th);
 }
 
 function orerationP() { /*startup function for opp.php*/
@@ -641,8 +643,8 @@ function getOPP(sel,mideId,comId,name){/* returns the form for opp.php*/
     //let outData='';
     let modal = document.getElementById("myModal");
     modal.style.display = "none";
-    const table = $("<h1 class='hh'>"+name+"-"+comId+"-"+code+"</h1>");
-    table.append($("<table class='center' id='oppTb' />"));
+    const th = $("<h1 class='hh'>"+name+"-"+comId+"-"+code+"</h1>");
+    const table=($("<table />", { "class":  "center",'id': 'oppTb'}));
     const header = $("<thead />");
     const headerRow = $("<tr />");
     headerRow.
@@ -696,7 +698,8 @@ function getOPP(sel,mideId,comId,name){/* returns the form for opp.php*/
                 </tr>`
     tableBody.append(tr);
     table.append(tableBody);
-    $('#out').append($(table));       
+    th.append(table);
+    $('#out').append($(th));       
 }
 
 function upcomingWStart() {/*Start up function for upcomming.php*/
@@ -732,9 +735,8 @@ function upcommonthMStart(){
 function getTaskTableUp(data){ /* returns table for upcomming.php and upcommonth.php*/
     let count=data.length;
     console.log(count);
-    const table = $("<h1 class='hh'>Upcoming Operations</h1>");
-    console.log(table);
-    table.append($("<table class='center' />"));
+    const th = $("<h1 class='hh'>Upcoming Operations</h1>");
+    const table=($("<table />", { "class":  "center"}));
     const header = $("<thead />");
     const headerRow = $("<tr />");
     headerRow.
@@ -778,28 +780,143 @@ function getTaskTableUp(data){ /* returns table for upcomming.php and upcommonth
         tableBody.append(tr);
       }
     table.append(tableBody);
-    return (table);
+    th.append(table);
+    return (th);
   }
 
 $(document).delegate("#span", "click", function(e) { /* to exit from modal*/
     let modal = document.getElementById("myModal");
-    //
       modal.style.display = "none";
 }); 
 function closeImgModal() { /* to exit from Image modal*/
   var modal = document.getElementById("imgModal");
   modal.style.display = "none";
 }
-function logOut() {
+function logOut() {/* to exit from application (when Log Out Clicked) for logout.php*/
   console.log(userId,inTime);
-  let num='Number=25&in_time='+inTime+'&id='+userId;
+  let num='Number=25';
     $.ajax({
         url: "backend2.php?"+num,
         type: "GET",
         success: function(data) { 
             console.log(data);
-            if (data)window.location.href ='login.php';
+            if (data==true)window.location.href ='login.php';
         }     
     });
 
+}
+function logView(){/* for log view in Modle (when Log Out Clicked) at index.php*/
+  let num='Number=26';
+  $.ajax({
+    url: "backend2.php?"+num,
+    type: "GET",
+    success: function(data) { 
+      console.log(data);
+      let x=JSON.parse(data);
+      console.log(x);
+      const outData=logTable(x,'Log'); 
+      console.log(outData);
+      $("section#searchResults").empty();
+      outData.appendTo($("section#searchResults"));
+      let modal = document.getElementById("myModal");
+      modal.style.display = "block";
+    }     
+  });
+}
+function userView(){
+  let num='Number=27';
+  $.ajax({
+    url: "backend2.php?"+num,
+    type: "GET",
+    success: function(data) { 
+      console.log(data);
+      let x=JSON.parse(data);
+      console.log(x);
+      let count=x.length;
+      for(let i=0;i<count;i++){
+        if(x[i]["Currently"]==1){x[i]["Currently"]='Logged In';}
+        else {
+          x[i]["Currently"]='Logged Out';
+          x[i]['button']="<img class='delImg' onclick= 'delUser("+x[i]['User Id']+")' src='img/delete.png'>";
+        }
+        if(x[i]["Status"]==1){x[i]["Status"]='Admin';}
+        else x[i]["Status"]='User';
+      }
+      const outData=logTable(x,'Users');
+      outData.append($('<button type="button"  id="addNU" onclick="addUser()">Add New User</button>'));;
+      console.log(outData);
+      $("section#searchResults").empty();
+      outData.appendTo($("section#searchResults"));
+      let modal = document.getElementById("myModal");
+      modal.style.display = "block";
+    }     
+  });
+}
+function addUser(){
+  console.log('I am in');
+  let modal = document.getElementById("myModal");
+  modal.style.display = "none";
+  window.location='addUs.php';
+
+}
+function delUser(id){
+  console.log(id);
+  let num='Number=28&id='+id;
+  $.ajax({
+    url: "backend2.php?"+num,
+    type: "GET",
+    success: function(data) { 
+      console.log(data);
+      userView();
+    }
+  });
+}
+function logTable(data,hd){ /*returns log as table for logView()*/
+  let count=data.length;
+  console.log(count);
+  //console.log(data[0]['id']);
+  let keys = Object.keys(data[0]);
+  console.log(keys);
+  const th = $("<h1 class='hh'>"+hd+"</h1>");
+  const table=($("<table />", { "class":  "center"}));
+  const header = $("<thead />");
+  const headerRow = $("<tr />");
+  headerRow.append($("<th />", { "text": "No."}));
+  for (let k of keys) {
+    headerRow.append($("<th />", { "text": k}));
+  }
+  header.append(headerRow);
+  table.append(header);
+  let tableBody = $("<tbody />");
+  let oe=0;
+  let classOE="";
+  for(let i=0;i<count;i++){
+    console.log(i);
+    keys = Object.keys(data[i]);
+    console.log(keys);
+
+    if(oe==0){
+      classOE="odd";
+      oe++;
+    }else{
+      classOE="even";
+      oe--;
+    }
+    let tB=($("<tr />", { "class": classOE}));
+
+    let j=i+1;
+    tB.append($("<td />", { "text": j }));
+    for (let k of keys) {
+      console.log(data[i][k]);
+      if(k!='button')
+      tB.append($("<td />", { "text":  data[i][k]}));
+      else tB.append($("<td />", { "html":  data[i][k]}));
+      
+    }
+    tableBody.append(tB);
+  }
+  table.append(tableBody);
+  th.append(table);
+  console.log(th);
+  return (th);
 }
