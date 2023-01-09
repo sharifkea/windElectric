@@ -1,4 +1,13 @@
 "use strict";
+$(window).bind('unload', function(){
+  $.ajax({
+    url: "backend2.php?"+num,
+    type: "GET",
+    success: function(data) { 
+                    
+    }     
+});
+});
 $(document).ready(function(){
     repositMenus();
 
