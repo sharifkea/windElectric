@@ -25,7 +25,6 @@ $_SESSION['countMonth']=$count;
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="refresh" content="900;url=logout.php" />
 	<script src="js/jquery-3.5.1.min.js"></script>
     <script type="text/javascript">
     var userEmail='<?php echo $_SESSION['email'];?>';
@@ -47,7 +46,8 @@ $_SESSION['countMonth']=$count;
             <a href="heli.php" class="main" id="hev">Heli View</a>
             <a href="sld<?php echo $_SESSION['farm']; ?>.php" class="main" id="sldv">SLD View</a>
             <a href="sldPak.php" class="main" id="pv">Package View</a>
-            <a href="history.php" class="main" id="mh">Maintenance History</a> 
+            <a href="mainhis.php" class="main" id="mh">Maintenance History</a>
+            <a href="history.php" class="main" id="mh">Remarks</a> 
             <a href="logout.php" class="main" id="up">Logout</a>
             <?php if($_SESSION['count']>0) { ?><input id="upCount" class="week" type="number" value="<?php echo ($_SESSION['count']);?>" readonly><?php } ?>
             <?php if($_SESSION['count']>0){ ?> <a href="upcoming.php" class="main" id="up">Upcoming(W)</a> <?php } ?>

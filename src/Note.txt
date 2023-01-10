@@ -66,6 +66,20 @@ JOIN mide m on m.id = ht.history_mide_id
 
 
 use zt8bhfo1tcz5g9xf;
+drop view if exists all_main_history;
+create view all_main_history as
+SELECT m.id,c.name as 'Component Name',CONCAT_WS('',c.component_code,m.code) as 'Component Code',o.Operation_Description as 'Operation Description',
+       th.user_email as 'Done By',th.report as 'Report', th.date_time as 'Date & Time',  th.image_name as 'Image'
+From task_history th
+JOIN tasks t on t.id = th.th_task_id
+    JOIN mide m on m.id = t.task_mide_id
+    join components c on c.id = m.component_id
+    join operation o on o.id = t.task_ope_id
+
+order by th.date_time ;
+
+
+use zt8bhfo1tcz5g9xf;
 INSERT INTO operation(ope_mide_id, Operation_Description, Maintenance_Frequency)
 VALUES (	1	,'	"Visual inspection of electrical connections via thermal imaging
 Visual inspection of oil level, dehydrating breathers, expansions bellows, surface damage, tank for leakages, valve positions, contacts and relays, bucholz relay, pressure relief valve, earthing system, maximum temperature indicator"	 ','	1Y	'),

@@ -6,55 +6,55 @@ $(window).bind('unload', function(){
     success: function(data) { 
                     
     }     
-});
+  });
 });
 $(document).ready(function(){
-    repositMenus();
+  repositMenus();
 
-    // Display of secondary menus(dropDownMenu) for power transformer at substhv.php*/
-    $("div#dpt1").on("mouseenter", function() {   
-        repositMenus();
-        $("#pt1Menu").slideDown("fast");
-    }).on("mouseleave", function() {
-        $("#pt1Menu").hide();
-    });
-    $("div#dpt2").on("mouseenter", function() {   
-        repositMenus();
-        $("div#pt2Menu").slideDown("fast");
-    }).on("mouseleave", function() {
-        $("div#pt2Menu").hide();
-    });
-    $("div#dpt3").on("mouseenter", function() {   
-        repositMenus();
-        $("div#pt3Menu").slideDown("fast");
-    }).on("mouseleave", function() {
-        $("div#pt3Menu").hide();
-    });
-    $("div.dropDownMenu").on("mouseenter", function() {
-        $(this).show();
-    }).on("mouseleave", function() {
-        $(this).hide();
-    });
+  // Display of secondary menus(dropDownMenu) for power transformer at substhv.php*/
+  $("div#dpt1").on("mouseenter", function() {   
+      repositMenus();
+      $("#pt1Menu").slideDown("fast");
+  }).on("mouseleave", function() {
+      $("#pt1Menu").hide();
+  });
+  $("div#dpt2").on("mouseenter", function() {   
+      repositMenus();
+      $("div#pt2Menu").slideDown("fast");
+  }).on("mouseleave", function() {
+      $("div#pt2Menu").hide();
+  });
+  $("div#dpt3").on("mouseenter", function() {   
+      repositMenus();
+      $("div#pt3Menu").slideDown("fast");
+  }).on("mouseleave", function() {
+      $("div#pt3Menu").hide();
+  });
+  $("div.dropDownMenu").on("mouseenter", function() {
+      $(this).show();
+  }).on("mouseleave", function() {
+      $(this).hide();
+  });
 });
-function repositMenus() {/*position for the dropDownMenu*/
-$("div#pt1Menu")
-.css({
-    "top": "495px",
-    "left": "420px",
-    "width": "160px"
-});        
-$("div#pt2Menu")
-.css({
-    "top": "495px",
-    "left": "600px",
-    "width": "160px"
-});        
-$("div#pt3Menu")
-.css({
-    "top": "500px",
-    "left": "780px",
-    "width": "160px"
-});
+  function repositMenus() {/*position for the dropDownMenu*/
+  $("div#pt1Menu")
+  .css({
+      "top": "495px",
+      "left": "420px",
+      "width": "160px"
+  });        
+  $("div#pt2Menu")
+  .css({
+      "top": "495px",
+      "left": "600px",
+      "width": "160px"
+  });        
+  $("div#pt3Menu")
+  .css({
+      "top": "500px",
+      "left": "780px",
+      "width": "160px"
+  });
 }
 function login(){ /* Belongs to login.php 'to verify user and password'*/
   let user = document.getElementById("user").value.trim();
@@ -146,7 +146,7 @@ function ptCall(name,comCode,code){ /* to get Tasks on modal*/
                       <td class='other'>${data[i].last_date}</td>
                       <td class='other'>${data[i].next_date}</td>
                       <td id='${data[i].task_mide_id}' onclick= 'getHistoryFT("${data[i].task_mide_id}",${opt})'><img class='saveimg' src='img/noteIcon.jpg'></td>
-                      <td id='${data[i].id}' onclick= 'delUp("${data[i].task_mide_id}","${data[i].id}","${data[i].Maintenance_Frequency}","${data[i].component_code}","${data[i].code}")'><img class='saveimg' src='img/doneIcon.jpg'></td>
+                      <td id='${data[i].id}' onclick= 'taskDone("${data[i].id}","${data[i].name}","${data[i].Operation_Description}","${data[i].Maintenance_Frequency}","${data[i].component_code}","${data[i].code}")'><img class='saveimg' src='img/doneIcon.jpg'></td>
                       </tr>`
           tableBody.append(tr);
         }
@@ -179,8 +179,98 @@ function getHistoryFT(mideId,opt){/* returns history */
       }
     });
 }
-function delUp(mideId,taskId,mF,comCode,code){/* to delete task from upcoming table*/
-    console.log(mideId,taskId);
+function taskDone(taskId,name,operation,mF,comCode,code){/* when a task done button clicked*/
+  mF="'"+mF+"'";
+  const header = $("<h1 class='hh'>"+name+"</h1>");
+  header.append($("<p class='pp'>Number:"+comCode+code+"</p>"));
+
+  const pg=($('<p class="pp">Operation Description:'+operation+'</p>'));
+  pg.append($('<br><label for="fname">Write Report:</label>'));
+  pg.append($("<input type='text' name='"+comCode+"' placeholder='New Note' id='tR' /><br>"));
+  pg.append($('<label for="fname">Select an Image File to Upload:</label>'));
+  pg.append($('<input id="file" type="file" name="file" accept="image/jpeg, image/png, image/jpg"></input><br>'));
+  pg.append($('<input name="'+code+'" type="submit" value="Done" id="addTH" onclick="addTaskHistory('+taskId+','+mF+')"/> </div>'));
+  const outData='';
+  header.append(pg);
+  //outData.append(pg); 
+  //console.log(outData);
+  $("section#searchResults").empty();
+  header.appendTo($("section#searchResults"));
+  let modal = document.getElementById("myModal");
+  modal.style.display = "block";
+}
+function addTaskHistory(taskId,mF){/* to delete task from upcoming table*/
+mF=mF.trim();
+  console.log(taskId,mF);
+  let history = document.getElementById("tR").value;
+  history=history.trim();
+  console.log(history);
+  if (history == "") {
+    alert("Note must be filled out");
+  }
+  else{
+    const file = document.getElementById("file");
+    let comCode = document.getElementById("tR").name;
+    let code = document.getElementById("addTH").name;
+    //let mide = document.getElementById("mide").value;
+    console.log(userEmail);
+    console.log(history,comCode,code);
+    console.log(file);
+    let image_name = null;
+    if(file.files[0]){ 
+      var property = file.files[0];
+      image_name= property.name;
+    }
+    //$_REQUEST['id'],$_REQUEST['report'],$_REQUEST['imgName']
+    let num='Number=29&report='+history+'&id='+taskId+'&imgName='+image_name;
+    console.log(num);
+    $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+        console.log(data);
+        if(data){
+          if(image_name!=null){
+            var form_data = new FormData();
+            form_data.append("file",property);
+            $.ajax({
+              url:'taskUpload.php',
+              method:'POST',
+              data:form_data,
+              contentType:false,
+              cache:false,
+              processData:false,
+              success:function(data){
+                if(data==true){
+                  
+                  alert("Operation History Saved.");
+                  closeModal();
+                  updateTask(mF,taskId);
+                  //getHistoryFT(mide,opt);
+                }
+                else{
+                  alert("Something went wrong.Operation History not Saved. Try (After Changing the Image Name) again.");
+                } 
+              }
+            });
+          }else {
+            alert("Operation History Saved.");
+            closeModal();
+            updateTask(mF,taskId);
+            //getHistoryFT(mide,opt);
+          }
+        }
+        else{
+          alert("Something went wrong.Operation History not Saved. Try again later");
+        }
+      }
+
+    });  
+  }
+}
+
+function updateTask(mF,taskId){
+    //console.log(mideId,taskId);
     let num=getNum(mF,taskId);
     $.ajax({ //to set next task date
       url: "backend2.php?"+num,
@@ -446,74 +536,84 @@ function clickTurbine(img) { /* for turbine.php to appear different components o
     }
 }
 function clickPowerS(img) { /* for powerST.php to appear different components of Power transformer*/
-    var style = getComputedStyle(img,null);
-    let modal = document.getElementById("psComp");
-    if(modal.style.display == "block"){
-        modal.style.display ="none";
-        img.style.width  = 600+"px"; // we need to append the "px" 
-        img.style.top = 200+"px"; // we need to append the "px" 
-        img.style.left = 500+"px";
-    }
-    else{
-        modal.style.display ="block";
-        img.style.width  = 350+"px"; // we need to append the "px" 
-        img.style.top = 510+"px"; // we need to append the "px" 
-        img.style.left = 800+"px";
-    }
+  var style = getComputedStyle(img,null);
+  let modal = document.getElementById("psComp");
+  if(modal.style.display == "block"){
+      modal.style.display ="none";
+      img.style.width  = 600+"px"; // we need to append the "px" 
+      img.style.top = 200+"px"; // we need to append the "px" 
+      img.style.left = 500+"px";
   }
+  else{
+      modal.style.display ="block";
+      img.style.width  = 350+"px"; // we need to append the "px" 
+      img.style.top = 510+"px"; // we need to append the "px" 
+      img.style.left = 800+"px";
+  }
+}
   
 function histortPageStart() { /*gets all history also content for component selection for history.php*/ 
-    let outData='';
-    let num='';
-    $('#out').empty();
-    $('.content').empty();
-    num='Number=5';
-    $.ajax({
-        url: "backend2.php?"+num,
-        type: "GET",
-        success: function(data) { 
-            console.log(data);
-            if(data!=false){
-                let x=JSON.parse(data);
-                let count=x.length;
-                outData+='<div id="select">';
-                outData+='<label for="comcode">Component:</label>';
-                outData+='<select id="comCod" onchange="getComponentHistory(this);">';
-                outData+='<option value="">--Select--</option>';
-                for(let i=0;i<count;i++){
-                    console.log(x[i].component_code,x[i].name);
-                    outData+='<option value="'+x[i].id+'" >'+x[i].name+'</option>';
-                }
-                outData+='</select>';
-                $('.content').append($(outData));
-            }
-            else alert("Something went wrong. Try again later");
-        }
-    });
-    num='Number=1';
-    $.ajax({
-        url: "backend2.php?"+num,
-        type: "GET",
-        success: function(data) { 
-            console.log(data);
-            if(data!=false){
-                let x=JSON.parse(data);
-                outData='';
-                outData=getTable('All History',x);
-                $('#out').append($(outData));     
-            }
-            else alert("Something went wrong. Try again later");
-        }
-    });
+  getComp('getHistoryFT');
+  getHistoryAll();
 }
-async function getComponentHistory(sel){ /* gets option list for component number selection for history.php*/
+
+function getComp(fun){
+  fun="'"+fun+"'";
+  let outData='';
+  let num='';
+  
+  $('.content').empty();
+  num='Number=5';
+  $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+          console.log(data);
+          if(data!=false){
+              let x=JSON.parse(data);
+              let count=x.length;
+              outData+='<div id="select">';
+              outData+='<label for="comcode">Component:</label>';
+              outData+='<select id="comCod" onchange="getComponentHistory(this,'+fun+');">';
+              outData+='<option value="">--Select--</option>';
+              for(let i=0;i<count;i++){
+                  console.log(x[i].component_code,x[i].name);
+                  outData+='<option value="'+x[i].id+'" >'+x[i].name+'</option>';
+              }
+              outData+='</select>';
+              $('.content').append($(outData));
+          }
+          else alert("Something went wrong. Try again later");
+      }
+  });
+}
+
+function getHistoryAll(){
+  $('#out').empty();
+  let num='Number=1';
+  $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+          console.log(data);
+          if(data!=false){
+              let x=JSON.parse(data);
+              //let outData='';
+              let outData=getTable('All History',x);
+              $('#out').append($(outData));     
+          }
+          else alert("Something went wrong. Try again later");
+      }
+  });
+}
+async function getComponentHistory(sel,fun){ /* gets option list for component number selection for history.php*/
     let name=sel.options[sel.selectedIndex].text;
     name='"'+name+'"';
     let comId = document.getElementById("comCod").value;
     $("section#searchResults").empty();  
     $("<label for='secCode'>Component Number:</label>").appendTo($("section#searchResults")); 
     let opt='"'+1+'"';                                                     
-    const selCode =$("<select id='selCode' onchange='getHistoryFT(this.options[this.selectedIndex].value,"+opt+");'>");
+    const selCode =$("<select id='selCode' onchange='"+fun+"(this.options[this.selectedIndex].value,"+opt+");'>");
     selCode.append($("<option value=''>--Select--</option>"));
     console.log(name);
     let num='Number=6&comId='+comId;
@@ -784,7 +884,7 @@ function getTaskTableUp(data){ /* returns table for upcomming.php and upcommonth
                     <td class='other'>${data[i].last_date}</td>
                     <td class='other'>${data[i].next_date}</td>
                     <td id='${data[i].task_mide_id}' onclick= 'getHistoryFT("${data[i].task_mide_id}",${opt})'><img class='saveimg' src='img/noteIcon.jpg'></td>
-                    <td id='${data[i].id}' onclick= 'delUp("${data[i].task_mide_id}","${data[i].id}","${data[i].Maintenance_Frequency}","${data[i].component_code}","${data[i].code}")'><img class='saveimg' src='img/doneIcon.jpg'></td>
+                    <td id='${data[i].id}' onclick= 'taskDone("${data[i].id}","${data[i].name}","${data[i].Operation_Description}","${data[i].Maintenance_Frequency}","${data[i].component_code}","${data[i].code}")'><img class='saveimg' src='img/doneIcon.jpg'></td>
                     </tr>`
         tableBody.append(tr);
       }
@@ -794,9 +894,13 @@ function getTaskTableUp(data){ /* returns table for upcomming.php and upcommonth
   }
 
 $(document).delegate("#span", "click", function(e) { /* to exit from modal*/
-    let modal = document.getElementById("myModal");
-      modal.style.display = "none";
+  closeModal();
 }); 
+function closeModal(){
+  let modal = document.getElementById("myModal");
+      modal.style.display = "none";
+}
+
 function closeImgModal() { /* to exit from Image modal*/
   var modal = document.getElementById("imgModal");
   modal.style.display = "none";
@@ -823,9 +927,11 @@ function logView(){/* for log view in Modle (when Log Out Clicked) at index.php*
       console.log(data);
       let x=JSON.parse(data);
       console.log(x);
-      const outData=logTable(x,'Log'); 
+      const th = $("<h1 class='hh'>Log</h1>");
+      const outData=logTable(x); 
       console.log(outData);
       $("section#searchResults").empty();
+      th.appendTo($("section#searchResults"));
       outData.appendTo($("section#searchResults"));
       let modal = document.getElementById("myModal");
       modal.style.display = "block";
@@ -851,10 +957,12 @@ function userView(){
         if(x[i]["Status"]==1){x[i]["Status"]='Admin';}
         else x[i]["Status"]='User';
       }
-      const outData=logTable(x,'Users');
+      const th = $("<h1 class='hh'>Users</h1>");
+      const outData=logTable(x);
       outData.append($('<button type="button"  id="addNU" onclick="addUser()">Add New User</button>'));;
       console.log(outData);
       $("section#searchResults").empty();
+      th.appendTo($("section#searchResults"));
       outData.appendTo($("section#searchResults"));
       let modal = document.getElementById("myModal");
       modal.style.display = "block";
@@ -880,13 +988,51 @@ function delUser(id){
     }
   });
 }
-function logTable(data,hd){ /*returns log as table for logView()*/
+
+function mainHistortPageStart(){
+  getComp('getMainHFT');
+
+}
+function getMainHFT(mideId,opt){/* returns Maintanence history */
+    console.log(mideId,opt);
+    let modal = document.getElementById("myModal");
+    modal.style.display = "none";
+    let num='Number=30&mideId='+mideId;
+    $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+        console.log(data);
+        let x=JSON.parse(data);
+        let name=x[0]['Component Name']+x[0]['Component Code'];  
+        console.log(name);
+        const th = $("<h1 class='hh'>Maintenance History Of "+name+" </h1>");
+        //const y=$('');
+        //const th = $("<h1 class='hh'>Log</h1>");
+        
+        if(x[0]['mide_id']!=undefined){
+          var outData=logTable(x); 
+        }
+        else{
+         var outData=($("<p>No Maintenance History found.</p>"));
+        }
+        //th.append(y);
+        console.log(th);
+        $('#out').empty();
+        $('#out').append($(th));
+        $('#out').append($(outData));
+      }
+    });
+}
+  
+
+function logTable(data){ /*returns log as table for logView()*/
   let count=data.length;
   console.log(count);
   //console.log(data[0]['id']);
   let keys = Object.keys(data[0]);
   console.log(keys);
-  const th = $("<h1 class='hh'>"+hd+"</h1>");
+  
   const table=($("<table />", { "class":  "center"}));
   const header = $("<thead />");
   const headerRow = $("<tr />");
@@ -925,7 +1071,7 @@ function logTable(data,hd){ /*returns log as table for logView()*/
     tableBody.append(tB);
   }
   table.append(tableBody);
-  th.append(table);
-  console.log(th);
-  return (th);
+  //th.append(table);
+  console.log(table);
+  return (table);
 }

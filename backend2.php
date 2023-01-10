@@ -106,19 +106,25 @@
             else echo '14 No Com Id';
         }    
         else if($_REQUEST['Number']==15){
+
             if(isset($_REQUEST['email'],$_REQUEST['password'])){
+
                 $returnValue=$service->getUser($_REQUEST['email']); 
                 if(password_verify($_REQUEST['password'], $returnValue[0]['password'])){
                     if($returnValue[0]['log_in']==1){
                         $x['0']['id']='in'; echo json_encode($x);
                     }
                     else{
+                        date_default_timezone_set ( 'Europe/Copenhagen' );
+                        $datetime = new DateTime();
+                        $datetime_str = $datetime->format( 'Y-m-d H:i:s' );
+                        //$datetime_str = wp_date( 'Y-m-d H:i:s' );
                         $ret=$service->userLog($returnValue[0]['id'],'1');
                         $_SESSION['email']=$_REQUEST['email'];
                         $_SESSION['userName']=$returnValue[0]['first_name'].' '.$returnValue[0]['last_name'];
                         $_SESSION['admin']=$returnValue[0]['admin'];
                         $_SESSION['id']=$returnValue[0]['id'];
-                        $_SESSION['inTime']=date('Y-m-d H:i:s');
+                        $_SESSION['inTime']=$datetime_str;
                         echo json_encode($returnValue);
                     }
                 }
@@ -195,7 +201,11 @@
             else echo '24No Com Id';
         }
         else if($_REQUEST['Number']==25){
-            $time=date('Y-m-d H:i:s');
+            date_default_timezone_set ( 'Europe/Copenhagen' );
+            $datetime = new DateTime();
+            $time = $datetime->format( 'Y-m-d H:i:s' );
+            //$time= wp_date( 'Y-m-d H:i:s' );
+            //$time=date('Y-m-d H:i:s');
             $retu=$service->insLog($_SESSION['id'],$_SESSION['inTime'],$time);
             $returnValue=$service->userLog($_SESSION['id'],'0');
             session_destroy();
@@ -217,6 +227,22 @@
                 //echo $_REQUEST['mideId'];
             }
             else echo '28 No Com Id';
+        }   
+        else if($_REQUEST['Number']==29){
+            if(isset($_REQUEST['id'])){
+                $returnValue=$service->insTaskHistory($_REQUEST['id'],$_REQUEST['report'],$_REQUEST['imgName'],$_SESSION['email']); 
+                echo json_encode($returnValue);
+                //echo $_REQUEST['mideId'];
+            }
+            else echo '29 No Com Id';
+        }
+        else if($_REQUEST['Number']==30){
+            if(isset($_REQUEST['mideId'])){
+                $returnValue=$service->getMainHWM($_REQUEST['mideId']); 
+                echo json_encode($returnValue);
+                //echo $_REQUEST['mideId'];
+            }
+            else echo 'No Com Id';
         }   
         else echo false;
         //else  $_SESSION['Number'] =1;

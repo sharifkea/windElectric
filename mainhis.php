@@ -1,5 +1,4 @@
-<?php
- //require_once 'src/data.php';    
+<?php    
     include ('header.php');
     $_SESSION['Number']=0;
     $_SESSION['back']=0;
@@ -29,7 +28,7 @@
             <img class="imgM-content" id="img01">
         </div>
         <script>
-            histortPageStart();
+            mainHistortPageStart();
     </script>
     </body>
 </html>

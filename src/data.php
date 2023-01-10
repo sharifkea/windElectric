@@ -145,7 +145,7 @@ class data extends DB{
         else{
             $stmt='';
             $query = <<<'SQL'
-            SELECT  m.id as mide_id,c.name ,c.component_code, m.code
+            SELECT  m.id as mide_id,c.name as componentName,c.component_code, m.code
                 FROM mide m
                 JOIN components c on m.component_id = c.id
                 where m.id=?;
@@ -461,6 +461,71 @@ class data extends DB{
             return false;
         }
     }
+    function insTaskHistory($id,$report,$imgName,$email){
+        $newDb = new DB;
+        $taskId=intval($id);
+        $report=$this->sqlInjection($report);
+        $email=$this->sqlInjection($email);
+        $imgName=$this->sqlInjection($imgName);        
+        try{
+            if($taskId!=null&&$report!=null&&$imgName==null&&$email!=null){
+                $query = <<<'SQL'
+                        INSERT INTO task_history (th_task_id,report,user_email) VALUES (?,?,?);
+                SQL;
+                $stmt = $newDb->pdo->prepare($query);
+                $stmt->execute([$taskId,$report,$email]);
+                $newID = $newDb->pdo->lastInsertId();
+                $newDb->disconnect();
+                return true;
+            }
+            else if($taskId!=null&&$report!=null&&$imgName!=null&&$email!=null){
+                $query = <<<'SQL'
+                        INSERT INTO task_history (th_task_id,report,image_name,user_email) VALUES (?,?,?,?);
+                SQL;
+                $stmt = $newDb->pdo->prepare($query);
+                $stmt->execute([$taskId,$report,$imgName,$email]);
+                $newID = $newDb->pdo->lastInsertId();
+                $newDb->disconnect();
+                return true;
+            }
+            else return false;
+
+        }
+        catch(Exception $e){
+            echo $e;
+            return false;
+        }
+    }
+    function getMainHWM($id){
+        $mideId=intval($id);
+        $newDb = new DB;
+        $query = <<<'SQL'
+            SELECT *
+            FROM all_main_history
+            where mide_id=?;
+            SQL;
+        $stmt = $newDb->pdo->prepare($query);
+        $stmt->execute([$mideId]);
+        $data=$stmt->fetchAll();
+        if(count($data)>0)
+        {   $newDb->disconnect();
+            return $data;
+        }
+        else{
+            $stmt='';
+            $query = <<<'SQL'
+            SELECT c.name as 'Component Name',concat_ws('',c.component_code,m.code) as 'Component Code'  from mide m
+            join components c on c.id = m.component_id
+            where m.id=?;
+            SQL;
+            $stmt = $newDb->pdo->prepare($query);
+            $stmt->execute([$mideId]);
+            $data=$stmt->fetchAll();
+            $newDb->disconnect();
+            return $data;            
+        }
+    }
+
     function sqlInjection($data){
         
         $data=htmlspecialchars(strip_tags($data));
