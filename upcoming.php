@@ -3,6 +3,14 @@
  
      
     include ('header.php');
+    if(!isset($_GET['m'])){
+        header("Location: index.php");
+    }else {
+        if($_GET['m']==1)$value='Week';
+        else if($_GET['m']==2)$value='Month';
+        else header("Location: index.php");
+        
+    }
     $_SESSION['Number']=0;
     $_SESSION['back']=0;
 ?>  
@@ -29,7 +37,7 @@
             <img class="imgM-content" id="img01">
         </div>
         <script>
-            upcomingWStart();
+            upcomStart('<?php echo $value; ?>');
         </script>
     </body>
 </html>

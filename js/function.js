@@ -230,7 +230,7 @@ mF=mF.trim();
       success: function(data) { 
         console.log(data);
         if(data){
-          if(image_name!=null){
+          if(image_name!=null&&image_name!='null'){
             var form_data = new FormData();
             form_data.append("file",property);
             $.ajax({
@@ -826,16 +826,42 @@ function upcomingWStart() {/*Start up function for upcomming.php*/
             
     });
 }
-function upcommonthMStart(){
+function upcomStart(value){
+  
     $('#out').empty();
-    let num='Number=17';
+    let num='';
+    if (value=='Month')num='Number=17';
+    else if(value=='Week')num='Number=10';
     $.ajax({
         url: "backend2.php?"+num,
         type: "GET",
         success: function(data) { 
             console.log(data);
             let x=JSON.parse(data);
-            let outData=getTaskTableUp(x);
+            const th = $("<h1 class='hh'>Upcoming Operations for this "+value+"</h1>");
+            if(x[0]['id']!=undefined){
+              let count=x.length;
+
+              for(let i=0;i<count;i++){
+                x[i]['Operation Description']= x[i]['Operation Description'].trim();
+                x[i]['Maintenance Frequency']= x[i]['Maintenance Frequency'].trim();
+                let name ="'"+x[i]['Component Name']+"'", od="'"+x[i]['Operation Description']+"'";
+                let mf="'"+x[i]['Maintenance Frequency']+"'";
+                let cc="'"+x[i]['component_code']+"'", opt="'"+2+"'";
+                x[i]['Note']='<img id="'+x[i]['mide_id']+'" onclick= "getHistoryFT('+x[i]['mide_id']+','+opt+')" class="saveimg" src="img/noteIcon.jpg" ></img>';
+                x[i]['Task']= '<img id="'+x[i]['id']+'" onclick= "taskDone('+x[i]['id']+','+name+','+od+','+mf+','+cc+','+data[i]['Component Code']+')" class="saveimg" src="img/doneIcon.jpg"></img>';
+                x[i]['Component Code']=x[i]['component_code']+x[i]['Component Code'];
+                delete(x[i]['component_code']);
+                delete(x[i]['mide_id']);
+                delete(x[i]['id']);
+              }
+          var outData=logTable(x); 
+        }
+        else{
+         var outData=($("<p>No Upcoming Operations found.</p>"));
+        }
+            //let outData=getTaskTableUp(x);
+            $('#out').append($(th));
             $('#out').append($(outData));
         }     
     });
@@ -991,8 +1017,8 @@ function delUser(id){
 
 function mainHistortPageStart(){
   getComp('getMainHFT');
-
 }
+
 function getMainHFT(mideId,opt){/* returns Maintanence history */
     console.log(mideId,opt);
     let modal = document.getElementById("myModal");
@@ -1011,6 +1037,16 @@ function getMainHFT(mideId,opt){/* returns Maintanence history */
         //const th = $("<h1 class='hh'>Log</h1>");
         
         if(x[0]['mide_id']!=undefined){
+          let count=x.length;
+          for(let i=0;i<count;i++){
+            
+            console.log(i);
+            if(x[i]['Image'])
+              x[i]['Image']='<img id="'+x[i].id+'" onclick= "imgModal('+x[i].id+')" src="taskuploads/'+x[i]['Image']+'" alt="Snow" style="width:100%;max-width:60px"></img>';
+            else x[i]['Image']='Image Not Available';
+            delete(x[i]['mide_id']);
+            delete(x[i]['id']);
+          }
           var outData=logTable(x); 
         }
         else{
@@ -1029,7 +1065,6 @@ function getMainHFT(mideId,opt){/* returns Maintanence history */
 function logTable(data){ /*returns log as table for logView()*/
   let count=data.length;
   console.log(count);
-  //console.log(data[0]['id']);
   let keys = Object.keys(data[0]);
   console.log(keys);
   
@@ -1063,8 +1098,8 @@ function logTable(data){ /*returns log as table for logView()*/
     tB.append($("<td />", { "text": j }));
     for (let k of keys) {
       console.log(data[i][k]);
-      if(k!='button')
-      tB.append($("<td />", { "text":  data[i][k]}));
+      if(k!='button'&&k!='Image'&&k!='Note'&&k!='Task')
+        tB.append($("<td />", { "text":  data[i][k]}));
       else tB.append($("<td />", { "html":  data[i][k]}));
       
     }

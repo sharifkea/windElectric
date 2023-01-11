@@ -65,7 +65,12 @@
             else echo 'No Com Id';
         }    
         else if($_REQUEST['Number']==10){
-                $returnValue=$service->getUpAll(); 
+            date_default_timezone_set ( 'Europe/Copenhagen' );
+            $datetime = new DateTime();
+            $datetime->modify('next monday');
+            $date = $datetime->format( 'Y-m-d' );
+            //echo $date;
+                $returnValue=$service->getUpAll($date); 
                 echo json_encode($returnValue);
                 //echo $_REQUEST['mideId'];
             
@@ -143,7 +148,11 @@
             else echo '14 No Com Id';
         }
         else if($_REQUEST['Number']==17){
-            $returnValue=$service->getUpAllM(); 
+            date_default_timezone_set ( 'Europe/Copenhagen' );
+            $datetime = new DateTime();
+            $datetime->modify('first day of next month');
+            $date = $datetime->format( 'Y-m-d' );
+            $returnValue=$service->getUpAll($date); 
             echo json_encode($returnValue);
             //echo $_REQUEST['mideId'];
         } 

@@ -6,14 +6,21 @@ if(!isset($_SESSION['farm'])){
     }
     else $_SESSION['farm']=$_GET['c'];
 }
+date_default_timezone_set ( 'Europe/Copenhagen' );
 require_once 'src/data.php';
+$datetime = new DateTime();
+$datetime->modify('next monday');
+$date = $datetime->format( 'Y-m-d' );
 $service = new data;
-$returnValue=$service->getUpRC();//to get Number of weekly tasks from DB
+$returnValue=$service->getUpAllCount($date);//to get Number of weekly tasks from DB
 $count=intval($returnValue[0]['COUNT(*)']);
 $_SESSION['count']=$count;
 
 $ser = new data;
-$returnValue=$ser->getUpRCM(); //to get Number of monthly tasks from DB
+$datetime = new DateTime();
+$datetime->modify('first day of next month');
+$date = $datetime->format( 'Y-m-d' );
+$returnValue=$ser->getUpAllCount($date); //to get Number of monthly tasks from DB
 $count=intval($returnValue[0]['COUNT(*)']);
 $_SESSION['countMonth']=$count;
 
@@ -50,9 +57,9 @@ $_SESSION['countMonth']=$count;
             <a href="history.php" class="main" id="mh">Remarks</a> 
             <a href="logout.php" class="main" id="up">Logout</a>
             <?php if($_SESSION['count']>0) { ?><input id="upCount" class="week" type="number" value="<?php echo ($_SESSION['count']);?>" readonly><?php } ?>
-            <?php if($_SESSION['count']>0){ ?> <a href="upcoming.php" class="main" id="up">Upcoming(W)</a> <?php } ?>
-            <?php if(isset($_SESSION['countMonth'])&&$_SESSION['countMonth']>0) { ?><input id="upCount" class='month' type="number" value="<?php echo ($_SESSION['countMonth']);?>" readonly><?php } ?>
-            <?php if(isset($_SESSION['countMonth'])&&$_SESSION['countMonth']>0){ ?> <a href="upcommonth.php" class="main" id="up">Upcoming(M)</a> <?php } ?>
+            <?php if($_SESSION['count']>0){ ?> <a href="upcoming.php?m=1" class="main" id="up">Upcoming(W)</a> <?php } ?>
+            <?php if($_SESSION['countMonth']>0) { ?><input id="upCount" class='month' type="number" value="<?php echo ($_SESSION['countMonth']);?>" readonly><?php } ?>
+            <?php if($_SESSION['countMonth']>0){ ?> <a href="upcoming.php?m=2" class="main" id="up">Upcoming(M)</a> <?php } ?>
             <div  class="dropdown" id='in'>
                 <a href="#" class="dropbtn">Operation Philosophy</a>
                 <div class="dropdown-content">

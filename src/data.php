@@ -189,31 +189,21 @@ class data extends DB{
         $this->disconnect();
         return $stmt->fetchAll(); 
     }
-    function getUpAll(){
+    function getUpAll($date){
         $query = <<<'SQL'
-        SELECT  t.id,t.task_mide_id,c.name ,c.component_code, m.code,o.Operation_Description, o.Maintenance_Frequency,t.last_date,t.next_date
-        FROM    upcoming u
-        JOIN  tasks t on u.task_id=t.id
-        JOIN mide m on t.task_mide_id = m.id
-        JOIN components c on m.component_id = c.id
-        JOIN operation o on o.id = t.task_ope_id;
+        SELECT  * FROM all_tasks where Next<?;
         SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
+        $stmt->execute([$date]);
         $this->disconnect();
         return $stmt->fetchAll();
     }
-    function getUpAllM(){
+    function getUpAllCount($date){
         $query = <<<'SQL'
-        SELECT  t.id,t.task_mide_id,c.name ,c.component_code, m.code,o.Operation_Description, o.Maintenance_Frequency,t.last_date,t.next_date
-        FROM    upcommonth u
-        JOIN  tasks t on u.task_id=t.id
-        JOIN mide m on t.task_mide_id = m.id
-        JOIN components c on m.component_id = c.id
-        JOIN operation o on o.id = t.task_ope_id;
+        SELECT  COUNT(*) FROM all_tasks where Next<?;
         SQL;
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
+        $stmt->execute([$date]);
         $this->disconnect();
         return $stmt->fetchAll();
     }
@@ -464,26 +454,30 @@ class data extends DB{
     function insTaskHistory($id,$report,$imgName,$email){
         $newDb = new DB;
         $taskId=intval($id);
+        if($imgName=='null')$imgName=null;
         $report=$this->sqlInjection($report);
         $email=$this->sqlInjection($email);
-        $imgName=$this->sqlInjection($imgName);        
+        if($imgName!=null)$imgName=$this->sqlInjection($imgName);   
+        date_default_timezone_set ( 'Europe/Copenhagen' );
+        $datetime = new DateTime();
+        $datetime_str = $datetime->format( 'Y-m-d H:i:s' );     
         try{
             if($taskId!=null&&$report!=null&&$imgName==null&&$email!=null){
                 $query = <<<'SQL'
-                        INSERT INTO task_history (th_task_id,report,user_email) VALUES (?,?,?);
+                        INSERT INTO task_history (th_task_id,report,user_email,date_time) VALUES (?,?,?,?);
                 SQL;
                 $stmt = $newDb->pdo->prepare($query);
-                $stmt->execute([$taskId,$report,$email]);
+                $stmt->execute([$taskId,$report,$email,$datetime_str]);
                 $newID = $newDb->pdo->lastInsertId();
                 $newDb->disconnect();
                 return true;
             }
             else if($taskId!=null&&$report!=null&&$imgName!=null&&$email!=null){
                 $query = <<<'SQL'
-                        INSERT INTO task_history (th_task_id,report,image_name,user_email) VALUES (?,?,?,?);
+                        INSERT INTO task_history (th_task_id,report,image_name,user_email,date_time) VALUES (?,?,?,?,?);
                 SQL;
                 $stmt = $newDb->pdo->prepare($query);
-                $stmt->execute([$taskId,$report,$imgName,$email]);
+                $stmt->execute([$taskId,$report,$imgName,$email,$datetime_str]);
                 $newID = $newDb->pdo->lastInsertId();
                 $newDb->disconnect();
                 return true;
