@@ -158,12 +158,12 @@ class data extends DB{
         //return 'rony';
     }
     function getTaskWCC($comCode,$code){
+        
         $query = <<<'SQL'
-            SELECT  t.id,t.task_mide_id,c.name ,c.component_code, m.code,o.Operation_Description, o.Maintenance_Frequency,t.last_date,t.next_date
-            FROM tasks t
-            JOIN mide m on t.task_mide_id = m.id
-            JOIN components c on m.component_id = c.id
-            JOIN operation o on o.id = t.task_ope_id
+            SELECT  a.id, a.mide_id, a.`Operation Description`, a.`Maintenance Frequency`,a. Last, a.Next
+            FROM all_tasks a
+            join mide m on a.mide_id=m.id
+            join components c on m.component_id = c.id
             where c.component_code=? and m.code=?;          
         SQL;
         $stmt = $this->pdo->prepare($query);
@@ -171,6 +171,9 @@ class data extends DB{
         $this->disconnect();
         return $stmt->fetchAll();
     }
+
+
+
     function getUpRC(){
         $query = <<<'SQL'
             Select COUNT(*) FROM upcoming;          

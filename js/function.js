@@ -95,9 +95,31 @@ function ptCall(name,comCode,code){ /* to get Tasks on modal*/
       success: function(data) { 
         let x=JSON.parse(data);
         console.log(x);
-        outData=getTaskTable(x); 
+        const th = $("<h1 class='hh'>"+name+"</h1>");
+        th.append($("<p class='pp'>Number:"+comCode+code+"</p>"));
+            if(x[0]['id']!=undefined){
+              let count=x.length;
+
+              for(let i=0;i<count;i++){
+                x[i]['Operation Description']= x[i]['Operation Description'].trim();
+                x[i]['Maintenance Frequency']= x[i]['Maintenance Frequency'].trim();
+                name ="'"+name+"'";
+                let od="'"+x[i]['Operation Description']+"'";
+                let mf="'"+x[i]['Maintenance Frequency']+"'";
+                let cc="'"+comCode+"'",cd="'"+code+"'", opt="'"+2+"'";
+                x[i]['Note']='<img id="'+x[i]['mide_id']+'" onclick= "getHistoryFT('+x[i]['mide_id']+','+opt+')" class="saveimg" src="img/noteIcon.jpg" ></img>';
+                x[i]['Task']= '<img id="'+x[i]['id']+'" onclick= "taskDone('+x[i]['id']+','+name+','+od+','+mf+','+cc+','+cd+')" class="saveimg" src="img/doneIcon.jpg"></img>';
+                delete(x[i]['mide_id']);
+                delete(x[i]['id']);
+              }
+          var outData=logTable(x); 
+        }
+        else{
+         var outData=($("<p>No Upcoming Operations found.</p>"));
+        } 
         console.log(outData);
         $("section#searchResults").empty();
+        th.appendTo($("section#searchResults"));
         outData.appendTo($("section#searchResults"));
         let modal = document.getElementById("myModal");
         modal.style.display = "block";
@@ -105,7 +127,7 @@ function ptCall(name,comCode,code){ /* to get Tasks on modal*/
     });
   }    
 
-  function getTaskTable(data){/* it returns table of task for ptCall()*/
+ /* function getTaskTable(data){// it returns table of task for ptCall()
     let count=data.length;
     console.log(count);
     
@@ -153,7 +175,7 @@ function ptCall(name,comCode,code){ /* to get Tasks on modal*/
       table.append(tableBody);
       th.append(table);
     return (th);
-}
+}*/
 
 function getHistoryFT(mideId,opt){/* returns history */
     console.log(mideId,opt);
@@ -811,7 +833,7 @@ function getOPP(sel,mideId,comId,name){/* returns the form for opp.php*/
     $('#out').append($(th));       
 }
 
-function upcomingWStart() {/*Start up function for upcomming.php*/
+/*function upcomingWStart() {//Start up function for upcomming.php
     $('#out').empty();
     let num='Number=10';
     $.ajax({
@@ -825,7 +847,7 @@ function upcomingWStart() {/*Start up function for upcomming.php*/
         }
             
     });
-}
+}*/
 function upcomStart(value){
   
     $('#out').empty();
@@ -867,7 +889,7 @@ function upcomStart(value){
     });
 }
 
-function getTaskTableUp(data){ /* returns table for upcomming.php and upcommonth.php*/
+/*function getTaskTableUp(data){ // returns table for upcomming.php and upcommonth.php
     let count=data.length;
     console.log(count);
     const th = $("<h1 class='hh'>Upcoming Operations</h1>");
@@ -917,8 +939,7 @@ function getTaskTableUp(data){ /* returns table for upcomming.php and upcommonth
     table.append(tableBody);
     th.append(table);
     return (th);
-  }
-
+  }*/
 $(document).delegate("#span", "click", function(e) { /* to exit from modal*/
   closeModal();
 }); 
@@ -1044,6 +1065,8 @@ function getMainHFT(mideId,opt){/* returns Maintanence history */
             if(x[i]['Image'])
               x[i]['Image']='<img id="'+x[i].id+'" onclick= "imgModal('+x[i].id+')" src="taskuploads/'+x[i]['Image']+'" alt="Snow" style="width:100%;max-width:60px"></img>';
             else x[i]['Image']='Image Not Available';
+            x[i]['Component Code']=x[i]['component_code']+x[i]['Component Code'];
+            delete(x[i]['component_code']);
             delete(x[i]['mide_id']);
             delete(x[i]['id']);
           }

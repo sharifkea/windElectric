@@ -64,11 +64,10 @@ JOIN mide m on m.id = ht.history_mide_id
     join module md on c.module_id = md.id
         order by ht.id ;
 
-
 use zt8bhfo1tcz5g9xf;
 drop view if exists all_main_history;
 create view all_main_history as
-SELECT m.id,c.name as 'Component Name',CONCAT_WS('',c.component_code,m.code) as 'Component Code',o.Operation_Description as 'Operation Description',
+SELECT th.id as id, m.id as mide_id,c.name as 'Component Name',c.component_code,m.code as 'Component Code',o.Operation_Description as 'Operation Description',
        th.user_email as 'Done By',th.report as 'Report', th.date_time as 'Date & Time',  th.image_name as 'Image'
 From task_history th
 JOIN tasks t on t.id = th.th_task_id
@@ -77,6 +76,18 @@ JOIN tasks t on t.id = th.th_task_id
     join operation o on o.id = t.task_ope_id
 
 order by th.date_time ;
+
+use zt8bhfo1tcz5g9xf;
+drop view if exists all_tasks;
+create view all_tasks as
+SELECT  t.id as id,t.task_mide_id as mide_id,c.name as 'Component Name' ,c.component_code,m.code as 'Component Code',
+       o.Operation_Description as 'Operation Description', o.Maintenance_Frequency as 'Maintenance Frequency',
+       t.last_date as 'Last',t.next_date as 'Next'
+        FROM tasks t
+        JOIN mide m on t.task_mide_id = m.id
+        JOIN components c on m.component_id = c.id
+        JOIN operation o on o.id = t.task_ope_id
+order by t.id;
 
 
 use zt8bhfo1tcz5g9xf;

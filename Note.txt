@@ -13,5 +13,8 @@ var userId='<?php echo $_SESSION['id'];?>';
 var inTime='<?php echo $_SESSION['inTime'];?>';
 
 
+ptCall(name,comCode,code),upcomStart(value),logView(),getMainHFT(mideId,opt),userView() -> uses-> logTable() returns table
+
+
 
 
