@@ -6,8 +6,11 @@
     if(!isset($_GET['m'])){
         header("Location: index.php");
     }else {
-        if($_GET['m']==1)$value='Week';
-        else if($_GET['m']==2)$value='Month';
+        if($_GET['m']==1){$value='Week';
+            $aid='a#upw';
+        }
+        else if($_GET['m']==2){$value='Month';
+            $aid='a#upm';}
         else header("Location: index.php");
         
     }
@@ -17,6 +20,12 @@
         
         </section>  
     </nav>
+        <style>
+            nav section#mainMenu <?php echo $aid; ?>{
+                background-color:#72ade5;
+            }
+        </style>
+       
     <body>
         
         <main>

@@ -54,9 +54,13 @@ if(isset($_SESSION['farm'])){
                         
                     </div>
                 </a>
-                <div id="swf">
-                    <p>Wind Farm-3 </P>
-                </div>
+                <a href="heli.php?c=3">
+                    <div id="swf">
+                    
+                        <p>Wind Farm-3 </P>
+                        
+                    </div>
+                </a>
                 <div id="swf">
                     <p>Wind Farm-4 </P>
                 </div>

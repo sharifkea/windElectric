@@ -175,6 +175,9 @@ nav section#mainMenu {
   line-height: 2rem;
   /*font-size: 0.9rem;*/
 }
+nav section#mainMenu a:hover{
+  background-color:#72ade5;
+}
 a.main {
   text-decoration: none;
   color: var(--colorSecondary);
@@ -581,7 +584,7 @@ table.center{
   text-align: right;
   font-weight: bold;
 }
- a#up{
+ a#upw,a#upm,a#lo{
   float: right;
   
 }
@@ -703,7 +706,7 @@ img#oeC {
 .dropbtn {
   text-decoration: none;
   color: var(--colorSecondary);
-  padding: 16px;
+  padding: 7px;
   font-size: 1.8em;
   border: none;
   font-weight: bold;
@@ -725,7 +728,7 @@ img#oeC {
 
 .dropdown-content a {
   color: black;
-  padding: 12px 16px;
+  padding: 12px 12.5px;
   text-decoration: none;
   display: block;
   font-size: 1.6em;
@@ -737,8 +740,9 @@ img#oeC {
 
 .dropdown:hover .dropdown-content {display: block;}
 
-.dropdown:hover .dropbtn {background-color: #72ade5;}
 
+
+.main:hover {background-color: #72ade5;}
 table#oppTb {
   line-height: 40px;  
 

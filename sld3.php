@@ -14,7 +14,7 @@
         <main id="sldM">        
         <article>
             <section id="pictures1">
-                <img src="img/SLD/sldForLV.jpg" id="sld2" alt="Single line diagram">
+                <img src="img/SLD/sld-substation.jpg" id="sld3" alt="Single line diagram">
             
             </section>
         </article> 

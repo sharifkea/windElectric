@@ -54,12 +54,12 @@ $_SESSION['countMonth']=$count;
             <a href="sld<?php echo $_SESSION['farm']; ?>.php" class="main" id="sldv">SLD View</a>
             <a href="sldPak.php" class="main" id="pv">Package View</a>
             <a href="mainhis.php" class="main" id="mh">Maintenance History</a>
-            <a href="history.php" class="main" id="mh">Remarks</a> 
-            <a href="logout.php" class="main" id="up">Logout</a>
+            <a href="history.php" class="main" id="re">Remarks</a> 
+            <a href="logout.php" class="main" id="lo">Logout</a>
             <?php if($_SESSION['count']>0) { ?><input id="upCount" class="week" type="number" value="<?php echo ($_SESSION['count']);?>" readonly><?php } ?>
-            <?php if($_SESSION['count']>0){ ?> <a href="upcoming.php?m=1" class="main" id="up">Upcoming(W)</a> <?php } ?>
+            <?php if($_SESSION['count']>0){ ?> <a href="upcoming.php?m=1" class="main" id="upw">Upcoming(W)</a> <?php } ?>
             <?php if($_SESSION['countMonth']>0) { ?><input id="upCount" class='month' type="number" value="<?php echo ($_SESSION['countMonth']);?>" readonly><?php } ?>
-            <?php if($_SESSION['countMonth']>0){ ?> <a href="upcoming.php?m=2" class="main" id="up">Upcoming(M)</a> <?php } ?>
+            <?php if($_SESSION['countMonth']>0){ ?> <a href="upcoming.php?m=2" class="main" id="upm">Upcoming(M)</a> <?php } ?>
             <div  class="dropdown" id='in'>
                 <a href="#" class="dropbtn">Operation Philosophy</a>
                 <div class="dropdown-content">
