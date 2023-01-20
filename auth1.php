@@ -17,13 +17,17 @@ exit(); }
     <meta http-equiv="refresh" content="1200; url=logout.php" />
     <script src="js/jquery-3.5.1.min.js"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function() { 
+        jQuery(document).ready(function() {
+          //debugger; 
           var validNavigation = false;
 
           // Attach the event keypress to exclude the F5 refresh
           $(document).bind('keypress', function(e) {
+            //let validNavigation = false;
+
             if (e.keyCode == 116){
               validNavigation = true;
+              //e.preventDefault();
             }
           });
 
@@ -41,10 +45,19 @@ exit(); }
           $("input[type=submit]").bind("click", function() {
             validNavigation = true;
           }); 
-
-          window.onbeforeunload = function() {                
-              if (!validNavigation) {                            
-                 var status = 'abandoned';
+          $("input").bind("click", function() {
+            validNavigation = true;
+          });
+          $('#oppForm').on("submit", function(){
+            validNavigation = true;
+          });
+          $("#opfid").on("submit", function() {
+            validNavigation = true;
+          });
+          window.onbeforeunload = function(e) {                
+              if (validNavigation!=true) {  
+                console.log(e.keyCode);                          
+                 //var status = 'abandoned';
                  let num='Number=25';
                 $.ajax({
                   url: "backend2.php?"+num,

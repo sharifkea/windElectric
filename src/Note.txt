@@ -78,16 +78,33 @@ JOIN tasks t on t.id = th.th_task_id
 order by th.date_time ;
 
 use zt8bhfo1tcz5g9xf;
+drop view if exists all_op_history;
+create view all_op_history as
+SELECT oh.id as id, t.id as tsak_id, t.last_date,c.name as 'Component Name',CONCAT(c.component_code,m.code) as 'Component Code',
+       o.Operation_Description as 'Operation Description',
+       oh.user_email as 'Done By',o.Maintenance_Frequency as 'Default Maintenance Frequency',
+       t.task_mf as 'Current Maintenance Frequency',  oh.op as 'Operation Philosophy'
+From op_history oh
+JOIN tasks t on t.id = oh.oph_task_id
+    JOIN mide m on m.id = t.task_mide_id
+    join components c on c.id = m.component_id
+    join operation o on o.id = t.task_ope_id
+
+use zt8bhfo1tcz5g9xf;
 drop view if exists all_tasks;
 create view all_tasks as
-SELECT  t.id as id,t.task_mide_id as mide_id,c.name as 'Component Name' ,c.component_code,m.code as 'Component Code',
-       o.Operation_Description as 'Operation Description', o.Maintenance_Frequency as 'Maintenance Frequency',
-       t.last_date as 'Last',t.next_date as 'Next'
-        FROM tasks t
-        JOIN mide m on t.task_mide_id = m.id
-        JOIN components c on m.component_id = c.id
-        JOIN operation o on o.id = t.task_ope_id
-order by t.id;
+select `t`.`id`                    AS `id`,
+       `t`.`task_mide_id`          AS `mide_id`,
+       `c`.`name`                  AS `Component Name`,
+       `c`.`component_code`        AS `component_code`,
+       `m`.`code`                  AS `Component Code`,
+       `o`.`Operation_Description` AS `Operation Description`,
+       `t`.`task_mf`               AS `Maintenance Frequency`,
+       `t`.`last_date`             AS `Last`,
+       `t`.`next_date`             AS `Next`
+from (((`zt8bhfo1tcz5g9xf`.`tasks` `t` join `zt8bhfo1tcz5g9xf`.`mide` `m` on ((`t`.`task_mide_id` = `m`.`id`))) join `zt8bhfo1tcz5g9xf`.`components` `c` on ((`m`.`component_id` = `c`.`id`)))
+         join `zt8bhfo1tcz5g9xf`.`operation` `o` on ((`o`.`id` = `t`.`task_ope_id`)))
+order by `t`.`id`;
 
 
 use zt8bhfo1tcz5g9xf;
@@ -378,3 +395,11 @@ DELETE FROM `zt8bhfo1tcz5g9xf`.`tasks` WHERE (`id` = '327');
 
 Offshore HDD Punch-out 
 bathymetry checks 2Y
+
+
+/*
+end=($("<input />", { "name":"mideId", "id":"opfs", "type":"hidden", "value":mideId}));
+    form.append(end);
+    end=($("<input />", { "name":"comId", "id":"opfs", "type":"submit", "value":comId}));
+    form.append(end);
+    let end=($("<input />", { "name":"ops", "id":"idOps", "type":"hidden", "value":ops}));

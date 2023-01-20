@@ -15,6 +15,40 @@ var inTime='<?php echo $_SESSION['inTime'];?>';
 
 ptCall(name,comCode,code),upcomStart(value),logView(),getMainHFT(mideId,opt),userView() -> uses-> logTable() returns table
 
+function getNum(mF,taskId){ /*it returns num value for delUp */ 
+    let Fre=mF.trim();
+    console.log(Fre);
+    const lst = Fre.slice(-1);
+    let inc =Fre.slice(0, -1);
+    inc=(inc*1);
+    const nd= new Date();
+    console.log(inc);
+    console.log(lst);
+    console.log(nd.getFullYear()+inc);
+    switch(lst) {
+      case 'Y':
+          nd.setFullYear(nd.getFullYear()+inc);
+        break;
+      case 'M':
+          
+          nd.setMonth(nd.getMonth()+inc);
+        break;
+      case 'W':
+          nd.setDate(nd.getDate()+(7*inc));
+          break;
+      case 'D':
+          nd.setDate(nd.getDate()+inc);
+          break;
+    }
+    const last_date = new Date().toJSON().slice(0, 10);
+    console.log(nd);
+    const next_date = nd.toJSON().slice(0, 10);
+    console.log(last_date);
+    console.log(next_date);
+    let num='Number=12&id='+taskId+'&last_date='+last_date+'&next_date='+next_date;
+    console.log(num);
+    return (num);
+  }
 
 
 

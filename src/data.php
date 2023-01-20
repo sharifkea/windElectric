@@ -310,9 +310,9 @@ class data extends DB{
 
     function getMideWComCode($comCode){
         $query = <<<'SQL'
-            SELECT  *
-            FROM mide
-            join components c on c.id = mide.component_id
+            SELECT  m.id, m.code
+            FROM mide m
+            join components c on c.id = m.component_id
             where component_code=?;          
         SQL;
         $stmt = $this->pdo->prepare($query);
@@ -520,6 +520,80 @@ class data extends DB{
             $data=$stmt->fetchAll();
             $newDb->disconnect();
             return $data;            
+        }
+    }
+    function getLDate($mId){
+        $id=intval($mId);
+       
+        $query = <<<'SQL'
+            select last_date
+        from tasks where id=?;  
+        SQL;
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$id]);                
+        $this->disconnect();
+        $ret=$stmt->fetchAll();
+        if($ret)return $ret[0]['last_date'];
+        else return false;
+        
+    }
+    function upDNDMF($mId,$mF,$newDate){
+        $id=intval($mId);
+        try{
+            $query = <<<'SQL'
+            UPDATE tasks
+            SET task_mf=?, next_date = ?
+            WHERE id = ?;
+            SQL;
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute([$mF,$newDate,$id]);
+            $this->disconnect();
+            return true;
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
+    function insOPH($mId,$ops,$email){
+        $tId=intval($mId);
+        $newDb = new DB;
+        try{
+            $query = <<<'SQL'
+            insert into op_history(oph_task_id, user_email, op) values (?,?,?);
+            SQL;
+            $stmt = $newDb->pdo->prepare($query);
+            $stmt->execute([$tId,$email,$ops]);
+            $newDb->disconnect();
+            return true;
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
+    function allOpHis(){
+        $query = <<<'SQL'
+            SELECT * FROM all_op_history;
+            SQL;
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        $this->disconnect();
+        return $stmt->fetchAll();
+    }
+    function delOPH($id){
+        $Id=intval($id);
+        $newDb = new DB;
+        try{
+            $query = <<<'SQL'
+            delete from op_history where id=?;
+            SQL;
+            $stmt = $newDb->pdo->prepare($query);
+            $stmt->execute([$Id]);
+            $newDb->disconnect();
+            if($stmt->rowCount()==1) return true;
+            else return false;
+        }
+        catch(Exception $e){
+            return $e;
         }
     }
 

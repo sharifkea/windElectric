@@ -15,6 +15,8 @@
     <body>
         
         <main>
+            <div class='content'>
+            </div>
             <div id="out">
             </div>
         </main>
@@ -28,7 +30,7 @@
             </div>
         </div>
         <script>
-             operationHistory();
+             operationP(2,'RCM');
         </script>
     </body>
 </html>

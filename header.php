@@ -63,8 +63,9 @@ $_SESSION['countMonth']=$count;
             <div  class="dropdown" id='in'>
                 <a href="#" class="dropbtn">Operation Philosophy</a>
                 <div class="dropdown-content">
-                    <a href="opp.php?b=CbM">CbM</a>
-                    <a href="opp.php?b=RCM">RCM</a>
+                    <a href="cbm.php">CbM</a>
+                    <a href="rcm.php">RCM</a>
+                    <a href="opp.php">History</a>
                 </div>
             </div>
             

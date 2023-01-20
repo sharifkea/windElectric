@@ -602,7 +602,7 @@ input.login{
   padding: 20px;
   margin-top: 16px;
 }
-button.button{
+button#opfb,button#opfs,button.ophbt,button.button{
   width: 88px;
   height: 28px;
   margin-top: 10px;

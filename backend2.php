@@ -251,11 +251,38 @@
                 echo json_encode($returnValue);
                 //echo $_REQUEST['mideId'];
             }
-            else echo 'No Com Id';
-        }   
-        else echo false;
-        //else  $_SESSION['Number'] =1;
-    // echo ($_SESSION['Number']);
+            else echo '30 No Com Id';
+        } 
+        else if($_REQUEST['Number']==31){
+            if(isset($_REQUEST['mId'])){
+                $returnValue=$service->getLDate($_REQUEST['mId']); 
+                echo $returnValue;
+            }
+            else echo '31 No Com Id';
+        }
+        else if($_REQUEST['Number']==32){
+            if(isset($_REQUEST['mId'])){
+                $returnValue=$service->upDNDMF($_REQUEST['mId'],$_REQUEST['mF'],$_REQUEST['newDate']); 
+                if($returnValue)
+                echo $service->insOPH($_REQUEST['mId'],$_REQUEST['ops'],$_SESSION['email']);
+                
+            }
+            else echo '32 No Com Id';
+        }
+        else if($_REQUEST['Number']==33){
+            $returnValue=$service->allOpHis(); 
+            echo json_encode($returnValue);
+        }
+        else if($_REQUEST['Number']==34){
+            if(isset($_REQUEST['id'], $_REQUEST['taskId'])){
+                $returnValue=$service->upDNDMF($_REQUEST['taskId'],$_REQUEST['mF'],$_REQUEST['newDate']); 
+                if($returnValue)
+                echo $service->delOPH($_REQUEST['id']);
+                
+            }
+            else echo '3 No Com Id';
+        }
     }
+    else echo false;
 
 ?>
