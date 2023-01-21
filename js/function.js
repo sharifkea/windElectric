@@ -828,12 +828,12 @@ function getOPP(sel,mideId,comId,name,ops){/* returns the form for opp.php*/
                 </tr>
                 <tr class='odd'>
                   <td class='other'>5</td>
-                  <td class='other'>MTTF: rate 1 to 10: (1 when a lot of failures- 10 when very very few failures)</td>
+                  <td class='other'>MTTF: rate 0 to 10: (0 when a lot of failures- 10 when very very few failures)</td>
                   <td class='other'><input id="idMF" name = "mf" type="number" min="0" step="1" max="10" required></td>
                 </tr>
                 <tr class="even">
                   <td class='other'>6</td>
-                  <td class='other'>MTTR: rate 1 to 10: ( 1 can be fixed very quickly- 10 takes very long time to be fixed such as few months for export cable failure)</td>
+                  <td class='other'>MTTR: rate 0 to 10: ( 0 can be fixed very quickly- 10 takes very long time to be fixed such as few months for export cable failure)</td>
                   <td class='other'><input id="idMR" name = "mr" type="number" min="0" step="1" max="10" required></td>
                 </tr>`
     tableBody.append(tr);
@@ -1179,7 +1179,6 @@ function oppCount(){
       alert('Answer Missing.');
     }else{
     console.log(req);
-    
     if(req['op']=='CbM'||(req['op']=='RCM'&&(req['comId']=='FSR-'||req['comId']=='STC-'||req['comId']=='PT-'||req['comId']=='MVS-'||req['comId']=='HVS-'||req['comId']=='OEC-'||req['comId']=='LC-')))
     {  let newReq=[];
       let keys = Object.keys(req);
@@ -1191,8 +1190,8 @@ function oppCount(){
       let last12=0;
       let three=newReq['sN2']+newReq['sN3']+newReq['sN4'];
       if(three==0&&newReq['sN1']==1) last12=1;
-      let pers=(((newReq['mf']+newReq['mr'])/2)*10)+(-50);
-      console.log(three,pers,last12);
+      let pct=(((newReq['mf']+newReq['mr'])/2)*10)+(-50);
+      console.log(three,pct,last12);
       
       let num='Number=9&comCode='+req['comId']+'&code='+req['code'];
       $.ajax({
@@ -1220,14 +1219,14 @@ function oppCount(){
                 month=12*inc;
                 if(last12==1)ft=inc*2;else ft=three*inc;
                 let one =month-ft;
-                let two =month+((month*pers)/100);
+                let two =month+(Math.round((month*pct)/100));
                 console.log(one,two);
                 if(one<two)finalT=one;else finalT=two;
                 finalT=finalT.toFixed(0);
                 if((finalT%12)==0){
                   fMF=(finalT/12)+'Y';
                 }else fMF=finalT+'M';
-                x[i]['New Maintenance Frequency']=fMF;
+                x[i]['Suggested Maintenance Frequency']=fMF;
                 x[i]['To Accept']='<input type="checkbox" id="vehicle1" name="'+x[i]["id"]+'" value="'+fMF+'"></input>';
                 j=j+1;
                 break;
@@ -1236,7 +1235,7 @@ function oppCount(){
                 if(month>11){
                   if(last12==1)ft=Math.round((inc/12)*2);else ft=Math.round((inc/12)*three);
                   let one =month-ft;
-                  let two =month+(Math.round((month*pers)/100));
+                  let two =month+(Math.round((month*pct)/100));
                   console.log(one,two);
                   if(one<two)finalT=one;else finalT=two;
                   finalT=finalT.toFixed(0);
