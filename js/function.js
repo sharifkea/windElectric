@@ -1,4 +1,13 @@
 "use strict";
+var opData={};
+opData['sN1']='The component has had problems in the last 12 months?';
+opData['sN2']='The component has had problems in FAT?';
+opData['sN3']='The component has had problems in SAT?';
+opData['sN4']='The component has higher than expected failures?';
+opData['mf']='MTTF: rate 0 to 10: (0 when a lot of failures- 10 when very very few failures)';
+opData['mr']='MTTR: rate 0 to 10: ( 0 taks Minimum - 10 takes Maximum time to be fixed)';
+var inp ='<input id="one" type="number" min="1" step="1" max="10">';
+var opOut={}, opHt1='',opHt2='',opSMF={};
 $(window).bind('unload', function(){
   $.ajax({
     url: "backend2.php?"+num,
@@ -783,6 +792,9 @@ function getOPP(sel,mideId,comId,name,ops){/* returns the form for opp.php*/
     modal.style.display = "none";
     let ht = "<h1 class='hh' id ='oph1'>Operation Philosophy-"+op+"</h1>";
     ht+="<h1 class='hh'>"+name+"-"+comId+code+"</h1>";
+    opHt1="Operation Philosophy-"+op;
+    opHt2=name+"-"+comId+code;
+    console.log(ht);
     let div=($("<div />", { "class":  "fDiv"}));
     const form=($("<form />", { "action":"","id": "opfid"/*, "onsubmit":"oppCount()"*/}));
     const table=($("<table />", { "class":  "center",'id': 'oppTb'}));
@@ -802,38 +814,38 @@ function getOPP(sel,mideId,comId,name,ops){/* returns the form for opp.php*/
       sele[i]+='<option value="">Select</option>';
       sele[i]+='<option value="1">Yes</option>';
       sele[i]+='<option value="0">No</option>';
-      sele[i]+='<option value="0">Dont Know</option>';
+      sele[i]+='<option value="12">Dont Know</option>';
       sele[i]+='</select>';
     }
-    let inp ='<input id="one" type="number" min="1" step="1" max="10">';
+    
     const tr = `<tr class='odd'>
                   <td class='other'>1</td>
-                  <td class='other'>The component has had problems in the last 12 months?</td>
+                  <td class='other'>${opData['sN1']}</td>
                   <td class='other'>${sele[0]}</td>
                 </tr>
                 <tr class="even">
                   <td class='other'>2</td>
-                  <td class='other'>The component has had problems in FAT?</td>
+                  <td class='other'>${opData['sN2']}</td>
                   <td class='other'>${sele[1]}</td>
                 </tr>
                 <tr class='odd'>
                   <td class='other'>3</td>
-                  <td class='other'>The component has had problems in SAT?</td>
+                  <td class='other'>${opData['sN3']}</td>
                   <td class='other'>${sele[2]}</td>
                 </tr>
                 <tr class="even">
                   <td class='other'>4</td>
-                  <td class='other'>The component has higher than expected failures?</td>
+                  <td class='other'>${opData['sN4']}</td>
                   <td class='other'>${sele[3]}</td>
                 </tr>
                 <tr class='odd'>
                   <td class='other'>5</td>
-                  <td class='other'>MTTF: rate 0 to 10: (0 when a lot of failures- 10 when very very few failures)</td>
+                  <td class='other'>${opData['mf']}</td>
                   <td class='other'><input id="idMF" name = "mf" type="number" min="0" step="1" max="10" required></td>
                 </tr>
                 <tr class="even">
                   <td class='other'>6</td>
-                  <td class='other'>MTTR: rate 0 to 10: ( 0 can be fixed very quickly- 10 takes very long time to be fixed such as few months for export cable failure)</td>
+                  <td class='other'>${opData['mr']}</td>
                   <td class='other'><input id="idMR" name = "mr" type="number" min="0" step="1" max="10" required></td>
                 </tr>`
     tableBody.append(tr);
@@ -858,6 +870,8 @@ function getOPP(sel,mideId,comId,name,ops){/* returns the form for opp.php*/
     //end+='</div>';
     //ht+=table;
     //ht+=end;
+    //opHt=ht;
+    //opData+=div;
     $('#out').append($(ht));
     $('#out').append($(div));  
     //$('#out').append($(end));     
@@ -973,6 +987,16 @@ function upcomStart(value){
 $(document).delegate("#span", "click", function(e) { /* to exit from modal*/
   closeModal();
 }); 
+function closeCBM() { /* to exit from modal*/
+  $("#out").empty();
+  closeModal();
+  //window.location.href ='cbm.php';
+}
+$(document).delegate("#spanRCM", "click", function(e) { /* to exit from modal*/
+  $("#out").empty();
+  closeModal();
+  //window.location.href ='rcm.php';
+});
 function closeModal(){
   let modal = document.getElementById("myModal");
       modal.style.display = "none";
@@ -1121,7 +1145,7 @@ function logTable(data){ /*returns log as table for logView()*/
   let keys = Object.keys(data[0]);
   console.log(keys);
   
-  const table=($("<table />", { "class":  "center"}));
+  const table=($("<table />", { "class":  "center", 'id':'dfTable'}));
   const header = $("<thead />");
   const headerRow = $("<tr />");
   headerRow.append($("<th />", { "text": "No."}));
@@ -1145,7 +1169,7 @@ function logTable(data){ /*returns log as table for logView()*/
       classOE="even";
       oe--;
     }
-    let tB=($("<tr />", { "class": classOE}));
+    let tB=($("<tr />", { "class": classOE }));
 
     let j=i+1;
     tB.append($("<td />", { "text": j }));
@@ -1165,10 +1189,13 @@ function logTable(data){ /*returns log as table for logView()*/
 }
 function oppCount(){
   let req={};
+  opOut={};
   const formData= $("#opfid").serializeArray();
     console.log(formData,formData.length);
     let j=0;
     let i=0;
+    //opData='';
+    //opData=document.querySelector("#oppTb");
     for(i=0;i<formData.length;i++){
       if(formData[i]['value']!=''){
         req[formData[j]['name']]=formData[i]['value'];
@@ -1183,10 +1210,17 @@ function oppCount(){
     {  let newReq=[];
       let keys = Object.keys(req);
       for (let k of keys) {
-        if(k!='b' || k!= 'comId'|| k!='submit')newReq[k]=req[k]*1;
-        else newReq[k]=req[k]
+        if(k!='b' || k!= 'comId'|| k!='submit'){
+          if(req[k]!='12')newReq[k]=req[k]*1; else newReq[k]=0;
+        }
+        else newReq[k]=req[k];
+        if(req[k]=='12')opOut[k]='Dont Know';
+        else if(req[k]=='1'&&k!='mf'&&k!='mr')opOut[k]='Yes';
+        else if(req[k]=='0'&&k!='mf'&&k!='mr')opOut[k]='No';
+        else opOut[k]=req[k];
       }
-      console.log(newReq);
+      
+      console.log(newReq,opOut);
       let last12=0;
       let three=newReq['sN2']+newReq['sN3']+newReq['sN4'];
       if(three==0&&newReq['sN1']==1) last12=1;
@@ -1227,7 +1261,7 @@ function oppCount(){
                   fMF=(finalT/12)+'Y';
                 }else fMF=finalT+'M';
                 x[i]['Suggested Maintenance Frequency']=fMF;
-                x[i]['To Accept']='<input type="checkbox" id="vehicle1" name="'+x[i]["id"]+'" value="'+fMF+'"></input>';
+                x[i]['To Accept']='<input type="checkbox" id="vehicle1" name="'+i+'='+x[i]["id"]+'" value="'+fMF+'"></input>';
                 j=j+1;
                 break;
               case 'M':
@@ -1243,7 +1277,7 @@ function oppCount(){
                     fMF=(finalT/12)+'Y';
                   }else fMF=finalT+'M';
                   x[i]['Suggested Maintenance Frequency']=fMF;
-                  x[i]['To Accept']='<input type="checkbox" id="vehicle1" name="'+x[i]["id"]+'" value="'+fMF+'"></input>';
+                  x[i]['To Accept']='<input type="checkbox" id="vehicle1" name="'+i+'='+x[i]["id"]+'" value="'+fMF+'"></input>';
                   j=j+1;
                 }else{
                   x[i]['Suggested Maintenance Frequency']="N/A";
@@ -1289,50 +1323,103 @@ function oppCount(){
   }
 }
 function subAccOpp(ops){
+  console.log(opData,opOut,opHt1,opHt2);
   const formData= $("#oppForm").serialize();
   console.log(formData,ops);
   const formDA= $("#oppForm").serializeArray();
   console.log(formDA);
   if(formDA.length>0){
     //let mId={};
-    //let mf={};
-
+    let tr='';
+    opSMF={};
     let i=0;
     let j=0;
+    let k=1;
     for(i=0;i<formDA.length;i++){
-        let mId=formDA[i]['name'];
-        let mF=formDA[i]['value'];
-        let num='Number=31&mId='+mId;
-        console.log(num);
-        $.ajax({
-          url: "backend2.php?"+num,
-          type: "GET",
-          success: function(data) { 
-            console.log(mF);
-            console.log(data);
-            let newDate=dateNMF(mF,data);
-            num='Number=32&mId='+mId+'&mF='+mF+'&newDate='+newDate+'&ops='+ops;
-            console.log(num);
-            $.ajax({
-              url: "backend2.php?"+num,
-              type: "GET",
-              success: function(data) { 
-                console.log(data);
-                if(data==true){
-                  j++;
-                }
-              }
-            });
+      const myArray = formDA[i]['name'].split("=");
+      tr=(myArray[0]*1)+1;
+      console.log(tr);
+      let mId=myArray[1];
+      let mF=formDA[i]['value'];
+      
+      console.log(mId,mF);
+      let x = document.getElementById("dfTable").rows[tr].cells;
+      console.log(x);
+      let od='';
+      if (x[1].innerHTML.length>20) {
+        od=x[1].innerHTML.substring(0,20);
+        console.log(od)
+      }else od=x[1].innerHTML;
+      //let l=k+1;
+      opSMF[k-1]=k+'. Operation Description: '+od+'... Last MF: '+x[2].innerHTML+' Suggested MF:'+x[5].innerHTML;
+      k=k+1;
+      let lastDate=x[3].innerHTML;
+      console.log(lastDate);
+      let newDate=dateNMF(mF,lastDate);
+      let num='Number=32&mId='+mId+'&mF='+mF+'&newDate='+newDate+'&ops='+ops;
+      console.log(num);
+      $.ajax({
+        url: "backend2.php?"+num,
+        type: "GET",
+        success: function(data) { 
+          console.log(data);
+          if(data==true){
+            j++;
           }
-        });
+        }
+      });
     }
     console.log(i);
-    alert('All Maintenance Frequencies changed.');
-  }else{
-    alert('No Maintenance Frequency changed.')
+    const th = $("<h1 class='hh'>All Maintenance Frequencies changed.<br> To Download Report as PDF </h1> <a href='#' id='download'>Download</a>");
+    $("section#searchResults").empty();
+    th.appendTo($("section#searchResults"));
+    //outData.appendTo($("section#searchResults"));
+    let modal = document.getElementById("myModal");
+    modal.style.display = "block";
+    }else{
+      const th = $("<h1 class='hh'>No Maintenance Frequency changed.</h1>");
+      $("section#searchResults").empty();
+      th.appendTo($("section#searchResults"));
+      //outData.appendTo($("section#searchResults"));
+      let modal = document.getElementById("myModal");
+      modal.style.display = "block";
   }
   $("#out").empty();
 }
+
+$(document).delegate("#download", "click", function(e) { /* to downlode PDF*/
+  console.log(opData,opOut,opHt1,opHt2,opSMF);
+  var doc = new jsPDF();
+  doc.setFont("helvetica", "bold");
+  doc.text(opHt1, 75, 10);
+  doc.setFont("helvetica", "bold");
+  doc.text(opHt2, 75, 20);
+  
+  let keys = Object.keys(opData);
+  let i=1;
+      for (let k of keys) {
+  doc.setFont("times", "italic");
+  let row=(25+(10*i));
+  doc.text(i+". "+opData[k]+" : "+opOut[k], 15,row);
+  i=i+1;
+  }
+  doc.setFont("times", "normal");
+  doc.text("Accepted Results", 15, 110);
+  let jkeys = Object.keys(opSMF);
+  i=0;
+  for (let k of jkeys) {
+    doc.setFont("times", "italic");
+    let row=(120+(10*i));
+    doc.text(opSMF[k], 15, row);
+    i=i+1;
+  }
+  let nd= new Date();
+  let d='op-'+Math.round(nd.getTime() / 1000)+'.pdf';
+  doc.save(d);
+  $("#out").empty();
+  closeModal();
+});
+
 function dateNMF(mF,date){ /*it returns num value for delUp */ 
     //let Fre=mF.trim();
     //console.log(Fre);

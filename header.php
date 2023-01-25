@@ -32,7 +32,7 @@ $_SESSION['countMonth']=$count;
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<script src="js/jquery-3.5.1.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script type="text/javascript">
     var userEmail='<?php echo $_SESSION['email'];?>';
     var userId='<?php echo $_SESSION['id'];?>';
