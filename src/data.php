@@ -596,6 +596,125 @@ class data extends DB{
             return $e;
         }
     }
+    function incFailure($data) { //look for email address
+        //"mId"=>"26", "insDate"=>"2015-02-01", "tf"=>"10M", "tr"=>"5D", "fDate"=>"2015-12-07", "rDate"=>"2015-12-12"
+        $mId=intval($data['mId']);
+        $newDb = new DB;
+        $query = <<<'SQL'
+            SELECT max(id) FROM failures;         
+            SQL;
+        $stmt = $newDb->pdo->prepare($query);
+        $stmt->execute();
+        if (!$stmt) {
+            die('Could not query:' . mysql_error());
+        }
+        else {
+            $fid=$stmt->fetchAll();
+            $fId = $fid[0]['max(id)']+1; 
+            
+            if(isset($data["insDate"])){
+                
+                $query = <<<'SQL'
+                    insert into mide_fail (mf_mide_id,installation_date,mttf,mttr,last_failure_id,total_no_failure) values (?,?,?,?,?,?);         
+                    SQL;
+                $stmt = $newDb->pdo->prepare($query);
+                $stmt->execute([$mId,$data["insDate"],$data["tf"],$data["tr"],$fId,1]);
+                $mfId = $newDb->pdo->lastInsertId();
+                     
+            
+            }
+            else{
+                $noF=intval($data['noF']);
+                $mfId=intval($data['mfId']);
+                $query = <<<'SQL'
+                    update mide_fail 
+                    set mttf=?,
+                        mttr=?,
+                        total_no_failure=?
+                        WHERE Id=?;
+                SQL;
+                $stmt = $newDb->pdo->prepare($query);
+                $stmt->execute([$data["tf"],$data["tr"],$noF,$mfId]);
+                $newDb->disconnect();
+            }
+            $nDb = new DB;
+            $query = <<<'SQL'
+                insert into failures (mf_id, recovery_date, failure_date) values (?,?,?);
+                SQL;
+            $stm = $nDb->pdo->prepare($query);
+            $stm->execute([$mfId,$data["rDate"],$data["fDate"]]);
+            $new_fId = $nDb->pdo->lastInsertId();
+            $nDb->disconnect();
+            if($new_fId){
+                $neDb = new DB;
+                $query = <<<'SQL'
+                update mide_fail 
+                    set last_failure_id=?
+                        WHERE Id=?;
+                SQL;
+                $stmt = $neDb->pdo->prepare($query);
+                $stmt->execute([$new_fId,$mfId]);
+                $neDb->disconnect();
+                return 1;
+            }
+            else return 2;             
+        }  
+    }
+    function getMideFail($id){
+        $newDb = new DB;
+        $id=intval($id);
+        $query = <<<'SQL'
+           select mf.id, mf.mf_mide_id,concat_ws(" ",c.name,c.component_code,m.code) as Name, mf.installation_date as Installation_Date, 
+            mf.mttf as MTTF,mf.mttr as MTTR, mf.total_no_failure as Total_No_of_Failure, f.failure_date as Last_Failure_Date,
+            f.recovery_date as Last_Recovery_Date from mide_fail mf
+            JOIN failures f on f.id = mf.last_failure_id
+            JOIN mide m on mf.mf_mide_id = m.id
+            join components c on c.id = m.component_id
+            where mf.mf_mide_id=?;          
+        SQL;
+        $stmt = $newDb->pdo->prepare($query);
+        $stmt->execute([$id]);
+        $ret=$stmt->fetchAll();
+        $newDb->disconnect();
+        $arrL = count($ret);
+        
+        if($arrL==0) {
+            $nDb = new DB;
+            $id=intval($id);
+            $query = <<<'SQL'
+                select concat_ws(" ",c.name,c.component_code,m.code) as Name from components c JOIN mide m on c.id = m.component_id
+                where m.id=?;          
+            SQL;
+            $stmt = $nDb->pdo->prepare($query);
+            $stmt->execute([$id]);
+            $ret=$stmt->fetchAll();
+            $nDb->disconnect();
+            $ret[0]['ret']='no Data';
+        }
+        else $ret[0]['ret']='Data';
+        return $ret;
+    }
+    function getAllFail(){
+        $newDb = new DB;
+        $query = <<<'SQL'
+            select mf.id, mf.mf_mide_id,concat_ws(" ",c.name,c.component_code,m.code) as Name, mf.installation_date as Installation_Date, 
+            mf.mttf as MTTF,mf.mttr as MTTR, mf.total_no_failure as Total_No_of_Failure, f.failure_date as Last_Failure_Date,
+            f.recovery_date as Last_Recovery_Date from mide_fail mf
+            JOIN failures f on f.id = mf.last_failure_id
+            JOIN mide m on mf.mf_mide_id = m.id
+            join components c on c.id = m.component_id
+
+            order by id;
+        SQL;
+        $stmt = $newDb->pdo->prepare($query);
+        $stmt->execute();
+        $ret=$stmt->fetchAll();
+        $newDb->disconnect();
+        $arrL = count($ret);
+        
+        if($arrL==0) return 'no Data';
+        else return $ret;
+    }
 
     function sqlInjection($data){
         

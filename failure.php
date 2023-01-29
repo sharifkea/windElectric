@@ -4,20 +4,18 @@
     $_SESSION['Number']=0;
     $_SESSION['back']=0;
 ?>  
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>    
+        
         </section>  
     </nav>
-
     <style>
-        nav section#mainMenu a.dropbtn{
+        nav section#mainMenu a#ft{
             background-color:#72ade5;
         }
     </style>
     <body>
         
         <main>
-            <div class='content'>
+            <div class='content' id='fCont'>
             </div>
             <div id="out">
             </div>
@@ -26,14 +24,13 @@
         <div id="myModal" class="modal">
             <!-- Modal content -->
             <div id="modal-content">
-                <span id="spanCBM" onclick= 'closeCBM()' class="close">&times;</span>
+                <span id="span" class="close">&times;</span>
                 <section id="searchResults">  
                 </section>
             </div>
         </div>
-        <div id='editor'>
         <script>
-             operationP(1,'CbM');
+             toFDate();
         </script>
     </body>
 </html>

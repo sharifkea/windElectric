@@ -403,3 +403,14 @@ end=($("<input />", { "name":"mideId", "id":"opfs", "type":"hidden", "value":mid
     end=($("<input />", { "name":"comId", "id":"opfs", "type":"submit", "value":comId}));
     form.append(end);
     let end=($("<input />", { "name":"ops", "id":"idOps", "type":"hidden", "value":ops}));
+
+    use zt8bhfo1tcz5g9xf;
+/*select * from mide_fail where mf_mide_id=1;
+SELECT max(id) FROM failures;
+insert into mide_fail (mf_mide_id,installation_date,mttf,mttr,last_failure_id,total_no_failure) values (?,?,?,?,?,?);
+insert into failures (mf_id, recovery_date, failure_date) values (?,?,?);
+select * from mide_fail where mf_mide_id=26;
+update mide_fail (mf_mide_id,installation_date,mttf,mttr,last_failure_id,total_no_failure) values (?,?,?,?,?,?);*/
+select mf.id, mf.mf_mide_id, mf.installation_date as Installation_Date, mf.mttf as MTTF, mf.mttr as MTTR, mf.total_no_failure as Total_No_of_Failure, f.failure_date as Last_Failure_Date, f.recovery_date as Last_Recovery_Date from mide_fail mf
+JOIN failures f on f.id = mf.last_failure_id
+where mf.mf_mide_id=27;

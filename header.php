@@ -54,7 +54,8 @@ $_SESSION['countMonth']=$count;
             <a href="sld<?php echo $_SESSION['farm']; ?>.php" class="main" id="sldv">SLD View</a>
             <a href="sldPak.php" class="main" id="pv">Package View</a>
             <a href="mainhis.php" class="main" id="mh">Maintenance History</a>
-            <a href="history.php" class="main" id="re">Remarks</a> 
+            <a href="history.php" class="main" id="re">Remarks</a>
+            <a href="failure.php" class="main" id="ft">Failure Toolbox</a> 
             <a href="logout.php" class="main" id="lo">Logout</a>
             <?php if($_SESSION['count']>0) { ?><input id="upCount" class="week" type="number" value="<?php echo ($_SESSION['count']);?>" readonly><?php } ?>
             <?php if($_SESSION['count']>0){ ?> <a href="upcoming.php?m=1" class="main" id="upw">Upcoming(W)</a> <?php } ?>
@@ -65,9 +66,10 @@ $_SESSION['countMonth']=$count;
                 <div class="dropdown-content">
                     <a href="cbm.php">CbM</a>
                     <a href="rcm.php">RCM</a>
-                    <a href="opp.php">History</a>
+                    <a href="opp.php">OP-History</a>
                 </div>
             </div>
+            
             
                     
         

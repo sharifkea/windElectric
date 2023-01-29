@@ -620,6 +620,7 @@ function getComp(fun){
 }
 
 function getHistoryAll(){
+  console.log('getHistoryAll');
   $('#out').empty();
   let num='Number=1';
   $.ajax({
@@ -1502,4 +1503,174 @@ function delOpHis(id,taskId,dmf,ld){
       }
     }
   });
+}
+
+function toFDate(){
+  let num='Number=37';
+    $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+          console.log(data);
+          let x=JSON.parse(data); 
+          console.log(x);
+          let table=logTable(x);
+          
+          $("#out").empty();
+          //$('#out').append($(th));
+          $('#out').append($(table));
+          }  
+      
+  });
+  //getInpDate(28);
+  getComp('getInpDate');
+}
+
+function getInpDate(mId,ex){
+
+  var myElem = document.getElementById('inP');
+  if (myElem === null) {
+  const div = $("<div id='inP'></div>");
+  $('#select').append($(div));}
+  else $('#inP').empty();
+  console.log(mId,ex);
+    let modal = document.getElementById("myModal");
+    modal.style.display = "none";
+    document.getElementById('comCod').value='';
+    /*let num='Number=8&mideId='+mideId;
+    $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+
+      }
+    });*/
+  //const mId="27";
+  let num='Number=35&mId='+mId;
+    $.ajax({
+      url: "backend2.php?"+num,
+      type: "GET",
+      success: function(data) { 
+          console.log(data);
+          let x=JSON.parse(data);
+          console.log(x);
+          const th = $("<h1 class='hh'>Insert Failure Information of : "+x[0]['Name']+"</h1>");
+          const form=($("<form />", { "action":"","id": "failInput"}));
+          data=data.trim();
+          if(x[0]['ret']=='no Data'){
+              var end=`
+              <label for="fname">Installation Date:</label>
+              <input type="date" id="dateId" name="insDate" min='2000-01-01' max='2024-01-01'><br>
+              <label for="lname">Date When Failure Occurs:</label>
+              <input type="date" id="dateId" name="fDate" min='2000-01-01' max='2024-01-01'><br>
+              <label for="lname">Date When Repairing Ends:</label>
+              <input type="date" id="dateId" name="rDate" min='2000-01-01' max='2024-01-01'><br>
+              <button name ="submit" type="button" value="Submit" onclick="getFDate(${mId},0)">Submit</button>`
+          }else{
+              var end=`
+              <label for="Fname">Date When Failure Occurs:</label>
+              <input type="date" id="dateId" name="fDate" min='2000-01-01' max='2024-01-01'><br>
+              <label for="Rname">Date When Repair Ends:</label>
+              <input type="date" id="dateId" name="rDate" min='2000-01-01' max='2024-01-01'><br>
+              <button name ="submit" type="button" value="Submit" onclick="getFDate(${mId},1)">Submit</button>`
+          }
+          form.append(end);
+          //$('#out').empty();
+          $('#inP').append($(th));
+          $('#inP').append($(form));
+          const today = new Date().toJSON().slice(0, 10);
+          document.getElementById("dateId").setAttribute("max", today);
+      }
+    });
+  }
+function getFDate(mId, inDb){
+  console.log(mId,inDb);
+  var newF={};
+  const formDA= $("#failInput").serializeArray();
+  console.log(formDA);
+  const len=formDA.length;
+  if((inDb==0&&len<3)||(inDb==1&&len<2)){
+      alert('Input Missing.');
+  }else{
+      for(let i=0;i<len;i++){
+          newF[formDA[i]['name']]=formDA[i]['value']
+      }
+      console.log(newF);
+      if(inDb==0){
+          if(newF["insDate"]>newF["fDate"]||newF["fDate"]>newF["rDate"])
+          {
+              alert('Incorrect Data Entered.');
+          }else{
+              let tf=monthDiff(newF["insDate"],newF["fDate"])+'M';
+              let tr=dayDiff(newF["fDate"],newF["rDate"])+'D';
+              //"mId"=>"26", "insDate"=>"2015-02-01", "tf"=>"10M", "tr"=>"5D", "fDate"=>"2015-12-07", "rDate"=>"2015-12-12"
+              let num='Number=36&mId='+mId+'&insDate='+newF["insDate"]+'&tf='+tf+'&tr='+tr+'&fDate='+newF["fDate"]+'&rDate='+newF["rDate"]; 
+              console.log(num);
+              $.ajax({
+                  url: "backend2.php?"+num,
+                  type: "GET",
+                  success: function(data){
+                      if(data)alert('Data Saved.');
+                      else alert('Something went wrong, Data not Saved.');
+                      toFDate();
+                  }
+              });
+          }
+      }else{
+          if(newF["fDate"]>newF["rDate"]){
+              alert('Incorrect Data Entered.');
+          }else{
+              let num='Number=35&mId='+mId;
+              $.ajax({
+                  url: "backend2.php?"+num,
+                  type: "GET",
+                  success: function(data) {
+                      let x=JSON.parse(data); 
+                      console.log(x);
+                      if(x[0].Last_Recovery_Date>newF["fDate"]){
+                        console.log(x[0].Last_Recovery_Date,newF["fDate"]);
+                          alert ('The component Failure occurs before the Last recovery date, unable to calculate MTTF.');
+                          toFDate();
+                      }else{
+                          let noF=(x[0].Total_No_of_Failure*1)+1;
+                          let inc =x[0]['MTTF'].slice(0, -1);
+                          inc=(inc*1);
+                          let tf=monthDiff(x[0]['Last_Failure_Date'],newF["fDate"]);
+                          tf=Math.round(((tf+(inc*x[0].Total_No_of_Failure))/noF))+'M';
+                          inc=x[0]['MTTR'].slice(0, -1);
+                          inc=(inc*1);
+                          let tr=dayDiff(newF["fDate"],newF["rDate"]);
+                          tr=Math.round(((tr+(inc*x[0].Total_No_of_Failure))/noF))+'D';
+                          let num='Number=36&mfId='+x[0]['id']+'&mId='+mId+'&noF='+noF+'&tf='+tf+'&tr='+tr+'&fDate='+newF["fDate"]+'&rDate='+newF["rDate"]; 
+                          console.log(num);
+                          $.ajax({
+                              url: "backend2.php?"+num,
+                              type: "GET",
+                              success: function(data){
+                                  console.log(data);
+                                  if(data==1)alert('Data Saved.');
+                                  else alert('Something went wrong, Data not Saved.');
+                                  toFDate();
+                              }
+                          });
+                          
+                      }
+                  }
+              });
+          }
+      }
+  }        
+  
+}
+function monthDiff(dateFrom, dateTo) {
+  var dt = new Date(dateTo);
+  var df= new Date(dateFrom);
+  return Math.round((dt.getMonth() - df.getMonth()) + 
+  (12 * (dt.getFullYear() - df.getFullYear())));
+}
+
+function dayDiff(dateFrom, dateTo) {
+  var dt = new Date(dateTo);
+  var df= new Date(dateFrom);
+  return Math.round((dt.getTime() - df.getTime())/ (1000 * 3600 * 24)); 
 }

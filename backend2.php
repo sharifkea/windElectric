@@ -282,6 +282,21 @@
             }
             else echo '3 No Com Id';
         }
+        else if($_REQUEST['Number']==35){
+            $returnValue=$service->getMideFail($_REQUEST['mId']);
+            echo json_encode($returnValue);
+    
+        }
+        else if($_REQUEST['Number']==36){
+            echo $service->incFailure($_REQUEST);
+        }
+        else if($_REQUEST['Number']==37){
+            $returnValue=$service->getAllFail();
+            if($returnValue=='no Data')
+            echo $returnValue;
+            else echo json_encode($returnValue);
+    
+        }
     }
     else echo false;
 
